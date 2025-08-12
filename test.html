@@ -1,0 +1,3186 @@
+<html style="overflow-x: hidden;">
+<head>
+    <style>
+        .helpicon {
+            float: right !important;
+            margin-top: -22px;
+        }
+
+        .ajax-loader {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            margin: auto; /* presto! */
+        }
+
+        .mgtop20 {
+            margin-top: 20px;
+        }
+
+        @media(min-width: 769px) {
+            .rtbrdr {
+                border-right: 1px #ddd solid;
+            }
+        }
+
+        @media(max-width: 768px) {
+            .bbbrdr {
+                border-bottom: 1px #ddd solid;
+            }
+        }
+    </style>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/regression.js"></script>
+    <link href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script type="text/javascript">
+        var Company = "";
+        var user = "";
+        var usert = ""
+        var countrysymbol = "";
+       // var apiurl = "http://devbimsanalysisapi.mineexcellence.com/Service.asmx/";
+        var apiurl = "https://bimsanalysisapi.mineexcellence.com/Service.asmx/";
+      //  var apiurl = "http://betabimsanalysis.mineexcellence.com/Service.asmx/";
+        //  var apiurl = "http://localhost:3753/Service.asmx/";
+        var extendqry = '';
+        var datewiseextendqry = '';
+        var typeofgraphcostperton = 'all';
+        var yearcostperton = '';
+        var monthcostperton = '';
+
+        var typeofgraphpw = 'all';
+        var yearpw = '';
+        var monthpw = '';
+
+        var db = "centralmineinfo";
+        function getQueryParams(qs) {
+            qs = qs.split('+').join(' ');
+
+            var params = {},
+                tokens,
+                re = /[?&]?([^=]+)=([^&]*)/g;
+
+            while (tokens = re.exec(qs)) {
+                params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+            }
+
+            return params;
+        }
+        function filteroption(id) {
+            if (id == "1") {
+                if ($('#ddlfilterblastcost').val() == "0") {
+                    document.getElementById("blastcostdivyearwise").style.display = "inline";
+                    document.getElementById("blastcostdivdatewise").style.display = "none";
+                } else {
+                    document.getElementById("blastcostdivyearwise").style.display = "none";
+                    document.getElementById("blastcostdivdatewise").style.display = "inline";
+                }
+
+            }
+            else if (id == "2") {
+                if ($('#ddlfiltercostperton').val() == "0") {
+                    document.getElementById("costpertondivyearwise").style.display = "inline";
+                    document.getElementById("costpertondivdatewise").style.display = "none";
+                } else {
+                    document.getElementById("costpertondivyearwise").style.display = "none";
+                    document.getElementById("costpertondivdatewise").style.display = "inline";
+                }
+
+            } else if (id == "3") {
+                if ($('#ddlfilterexp').val() == "0") {
+                    document.getElementById("expdivyearwise").style.display = "inline";
+                    document.getElementById("expdivdatewise").style.display = "none";
+                } else {
+                    document.getElementById("expdivyearwise").style.display = "none";
+                    document.getElementById("expdivdatewise").style.display = "inline";
+                }
+
+            }
+            else if (id == "4") {
+                if ($('#ddlfilterenv').val() == "0") {
+                    document.getElementById("envdivyearwise").style.display = "inline";
+                    document.getElementById("envdivdatewise").style.display = "none";
+                } else {
+                    document.getElementById("envdivyearwise").style.display = "none";
+                    document.getElementById("envdivdatewise").style.display = "inline";
+                }
+
+            } if (id == "5") {
+                if ($('#ddlfilterbvs').val() == "0") {
+                    document.getElementById("bvsdivyearwise").style.display = "inline";
+                    document.getElementById("bvsdivdatewise").style.display = "none";
+                } else {
+                    document.getElementById("bvsdivyearwise").style.display = "none";
+                    document.getElementById("bvsdivdatewise").style.display = "inline";
+                }
+
+            } else if (id == "6") {
+                if ($('#ddlfilterppm').val() == "0") {
+                    document.getElementById("ppmdivyearwise").style.display = "inline";
+                    document.getElementById("ppmdivdatewise").style.display = "none";
+                } else {
+                    document.getElementById("ppmdivyearwise").style.display = "none";
+                    document.getElementById("ppmdivdatewise").style.display = "inline";
+                }
+
+            } else if (id == "7") {
+                if ($('#ddlfilterpph').val() == "0") {
+                    document.getElementById("pphdivyearwise").style.display = "inline";
+                    document.getElementById("pphdivdatewise").style.display = "none";
+                } else {
+                    document.getElementById("pphdivyearwise").style.display = "none";
+                    document.getElementById("pphdivdatewise").style.display = "inline";
+                }
+
+            } else if (id == "8") {
+                if ($('#ddlfilterfly').val() == "0") {
+                    document.getElementById("flydivyearwise").style.display = "inline";
+                    document.getElementById("flydivdatewise").style.display = "none";
+                } else {
+                    document.getElementById("flydivyearwise").style.display = "none";
+                    document.getElementById("flydivdatewise").style.display = "inline";
+                }
+
+            } else if (id == "9") {
+                if ($('#ddlfiltersc').val() == "0") {
+                    document.getElementById("scdivyearwise").style.display = "inline";
+                    document.getElementById("scdivdatewise").style.display = "none";
+                } else {
+                    document.getElementById("scdivyearwise").style.display = "none";
+                    document.getElementById("scdivdatewise").style.display = "inline";
+                }
+
+            }
+            else if (id == "10")
+            {
+                if ($('#ddlfiltersd').val() == "0") {
+                    document.getElementById("sddivyearwise").style.display = "inline";
+                    document.getElementById("sddivdatewise").style.display = "none";
+                } else {
+                    document.getElementById("sddivyearwise").style.display = "none";
+                    document.getElementById("sddivdatewise").style.display = "inline";
+                }
+
+            }
+           
+            else if (id == "11") {
+                if ($('#ddlfilterblastcostTotal').val() == "0") 
+                {
+                    document.getElementById("blastcostdivyearwiseTotal").style.display = "inline";
+                    document.getElementById("blastcostdivdatewiseTotal").style.display = "none";
+                } else {
+                    document.getElementById("blastcostdivyearwiseTotal").style.display = "none";
+                    document.getElementById("blastcostdivdatewiseTotal").style.display = "inline";
+                }
+
+            }
+        }
+        function loadall() {
+            LoadChartOpertionalCost(Company, user, usert, 'all', '', '', extendqry);
+               LoadChartOpertionalCostTotal(Company, user, usert, 'all', '', '', extendqry);
+            LoadChartProductionvsOpertionalCost(Company, user, usert, 'all', '', '', extendqry);
+            LoadChartExplosivevsPowderfactor(Company, user, usert, 'all', '', '', extendqry);
+            LoadChartperformance(Company, user, usert, 'all', '', '', extendqry);
+            LoadChartBurdenvsspacing(Company, user, usert, 'all', '', '', extendqry);
+            LoadChartoutputpermeter(Company, user, usert, 'all', '', '', extendqry);
+            LoadChartoutputperhole(Company, user, usert, 'all', '', '', extendqry);
+            LoadChartperformanceflyrock(Company, user, usert, 'all', '', '', extendqry);
+            LoadChartspecificcharge(Company, user, usert, 'all', '', '', extendqry);
+            LoadChartspecificdrilling(Company, user, usert, 'all', '', '', extendqry);
+        }
+        $(function () {
+            $("#dateblastcostfrom,#dateblastcostto,#dateblastcostfromTotal,#dateblastcosttoTotal,#datecostpertonfrom,#datecostpertonto,#dateexpfrom,#dateexpto,#dateenvfrom,#dateenvto,#dateenvfromfly,#dateenvtofly,#datebvsfrom,#datebvsto,#datepphfrom,#datepphto,#dateppmfrom,#dateppmto,#datescfrom,#datescto,#datesdfrom,#datesdto").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                dateFormat: 'yy-mm-dd'
+
+            });
+            var query = getQueryParams(document.location.search);
+            Company = query.companyId;
+            user = query.userid;
+            usert = query.usertype
+            countrysymbol = query.countrysymbol;
+
+            loadyear(Company, user, usert);
+            loadMine(Company, user, usert);
+            // loadrock(Company);
+            loadall();
+
+            $("[id*=dateblastcostfrom],[id*=dateblastcostto]").bind("change", function () {
+                var datefrom = $('#dateblastcostfrom').val();
+                var dateto = $('#dateblastcostto').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartOpertionalCost(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+
+
+            $("[id*=dateblastcostfromTotal],[id*=dateblastcosttoTotal]").bind("change", function () {
+                var datefrom = $('#dateblastcostfromTotal').val();
+                var dateto = $('#dateblastcosttoTotal').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartOpertionalCostTotal(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+
+
+
+
+
+
+
+            $("[id*=datecostpertonfrom],[id*=datecostpertonto]").bind("change", function () {
+                typeofgraphcostperton = 'DateRange';
+                var datefrom = $('#datecostpertonfrom').val();
+                var dateto = $('#datecostpertonto').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartProductionvsOpertionalCost(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+            $("[id*=dateexpfrom],[id*=dateexpto]").bind("change", function () {
+                var datefrom = $('#dateexpfrom').val();
+                var dateto = $('#dateexpto').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartExplosivevsPowderfactor(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+            $("[id*=dateenvfrom],[id*=dateenvto]").bind("change", function () {
+                var datefrom = $('#dateenvfrom').val();
+                var dateto = $('#dateenvto').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartperformance(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+            $("[id*=dateenvfromfly],[id*=dateenvtofly]").bind("change", function () {
+                var datefrom = $('#dateenvfromfly').val();
+                var dateto = $('#dateenvtofly').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartperformanceflyrock(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+            $("[id*=datebvsfrom],[id*=datebvsto]").bind("change", function () {
+                var datefrom = $('#datebvsfrom').val();
+                var dateto = $('#datebvsto').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartBurdenvsspacing(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+            $("[id*=dateppmfrom],[id*=dateppmto]").bind("change", function () {
+                var datefrom = $('#dateppmfrom').val();
+                var dateto = $('#dateppmto').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartoutputpermeter(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+
+            $("[id*=datepphfrom],[id*=datepphto]").bind("change", function () {
+                var datefrom = $('#datepphfrom').val();
+                var dateto = $('#datepphto').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartoutputperhole(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+
+            $("[id*=datescfrom],[id*=datescto]").bind("change", function () {
+                var datefrom = $('#datescfrom').val();
+                var dateto = $('#datescto').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartspecificcharge(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+            $("[id*=datesdfrom],[id*=datesdto]").bind("change", function () {
+                var datefrom = $('#datesdfrom').val();
+                var dateto = $('#datesdto').val();
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                //alert(datewiseextendqry);
+
+                if (datefrom !== "" && dateto !== "") {
+                    //alert("dafds");
+                    LoadChartspecificdrilling(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                }
+
+            });
+
+
+
+            $("[id*=ddlmine]").bind("change", function () {
+
+                extendqry = "";
+                extendqry = "and MineCode=" + $('#ddlmine').val();
+                //alert(extendqry);
+                loadall();
+                loadPit($('#ddlmine').val());
+            });
+
+            $("[id*=ddlpit]").bind("change", function () {
+                extendqry = "and blastdetail.MineCode=" + $('#ddlmine').val() + " and blastdetail.PitCode=" + $('#ddlpit').val();
+                //alert(extendqry);
+                loadZone($('#ddlpit').val());
+                loadall();
+            });
+
+
+            $("[id*=ddlzone]").bind("change", function () {
+                extendqry = "and blastdetail.MineCode=" + $('#ddlmine').val() + " and blastdetail.PitCode=" + $('#ddlpit').val() + " and blastdetail.ZoneCode=" + $('#ddlzone').val();
+                //alert(extendqry);
+
+                loadall();
+
+                loadbench($('#ddlzone').val());
+
+                loadrock($('#ddlzone').val());
+            });
+
+
+            $("[id*=ddlbench]").bind("change", function () {
+                extendqry = "and blastdetail.MineCode=" + $('#ddlmine').val() + " and blastdetail.PitCode=" + $('#ddlpit').val() + " and blastdetail.ZoneCode=" + $('#ddlzone').val() + " and blastdetail.BenchCode=" + $('#ddlbench').val();
+                //alert(extendqry);
+                loadall();
+
+            });
+
+            $("[id*=ddlrock]").bind("change", function () {
+                extendqry = "and RockCode=" + $('#ddlrock').val()
+                //alert(extendqry);
+                loadall();
+
+            });
+
+
+            $("[id*=btnblastcost]").bind("click", function () {
+                // var yearrange = $("[id*=ddloperationcostfrom]").val() + ',' + $("[id*=ddloperationcostto]").val()
+                var datefrom = "2017-05-01";
+                var dateto = "2018-01-19";
+                //alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                // alert(extendqry);
+                LoadChartOpertionalCost(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+            });
+
+            $("[id*=btncostperton]").bind("click", function () {
+                // var yearrange = $("[id*=ddloperationcostfrom]").val() + ',' + $("[id*=ddloperationcostto]").val()
+                var datefrom = "2013-05-01";
+                var dateto = "2018-01-19";
+                alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                alert(extendqry);
+                LoadChartProductionvsOpertionalCost(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+            });
+
+            $("[id*=btnburden]").bind("click", function () {
+                // var yearrange = $("[id*=ddloperationcostfrom]").val() + ',' + $("[id*=ddloperationcostto]").val()
+                var datefrom = "2010-01-01";
+                var dateto = "2018-01-01";
+                alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                alert(extendqry);
+                LoadChartBurdenvsspacing(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+            });
+
+            $("[id*=btnenv]").bind("click", function () {
+                // var yearrange = $("[id*=ddloperationcostfrom]").val() + ',' + $("[id*=ddloperationcostto]").val()
+                var datefrom = "2017-05-01";
+                var dateto = "2018-01-19";
+                alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                alert(extendqry);
+                LoadChartperformance(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+            });
+
+            $("[id*=btnexp]").bind("click", function () {
+                // var yearrange = $("[id*=ddloperationcostfrom]").val() + ',' + $("[id*=ddloperationcostto]").val()
+                var datefrom = "2010-01-01";
+                var dateto = "2018-01-01";
+                alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                alert(datewiseextendqry);
+                LoadChartExplosivevsPowderfactor(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+            });
+            $("[id*=btnpph]").bind("click", function () {
+                // var yearrange = $("[id*=ddloperationcostfrom]").val() + ',' + $("[id*=ddloperationcostto]").val()
+                var datefrom = "2010-01-01";
+                var dateto = "2018-01-01";
+                alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                alert(extendqry);
+                LoadChartoutputperhole(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+            });
+            $("[id*=btnppm]").bind("click", function () {
+                // var yearrange = $("[id*=ddloperationcostfrom]").val() + ',' + $("[id*=ddloperationcostto]").val()
+                var datefrom = "2010-01-01";
+                var dateto = "2018-01-01";
+                alert("clicked");
+                datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                alert(extendqry);
+                LoadChartoutputpermeter(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+            });
+
+
+
+
+            $("[id*=ddloperationcostfrom]").bind("change", function () {
+                var yearrange = $("[id*=ddloperationcostfrom]").val() + ',' + $("[id*=ddloperationcostto]").val()
+
+                LoadChartOpertionalCost(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddloperationcostto]").bind("change", function () {
+                var yearrange = $("[id*=ddloperationcostfrom]").val() + ',' + $("[id*=ddloperationcostto]").val()
+
+                LoadChartOpertionalCost(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+
+
+              $("[id*=ddloperationcostfromTotal]").bind("change", function () {
+                var yearrange = $("[id*=ddloperationcostfromTotal]").val() + ',' + $("[id*=ddloperationcosttoTotal]").val()
+
+                LoadChartOpertionalCostTotal(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddloperationcosttoTotal]").bind("change", function () {
+                var yearrange = $("[id*=ddloperationcostfromTotal]").val() + ',' + $("[id*=ddloperationcosttoTotal]").val()
+
+                LoadChartOpertionalCostTotal(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+
+
+
+
+
+
+
+
+            $("[id*=Gddlblstperfrom]").bind("change", function () {
+                var yearrange = $("[id*=Gddlblstperfrom]").val() + ',' + $("[id*=Gddlblstperto]").val()
+                LoadChartperformance(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=Gddlblstperto]").bind("change", function () {
+                var yearrange = $("[id*=Gddlblstperfrom]").val() + ',' + $("[id*=Gddlblstperto]").val()
+                LoadChartperformance(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlblstperfromfly]").bind("change", function () {
+                var yearrange = $("[id*=ddlblstperfromfly]").val() + ',' + $("[id*=ddlblstpertofly]").val()
+                LoadChartperformanceflyrock(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlblstpertofly]").bind("change", function () {
+                var yearrange = $("[id*=ddlblstperfromfly]").val() + ',' + $("[id*=ddlblstpertofly]").val()
+                LoadChartperformanceflyrock(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlprodvsopcostfrom]").bind("change", function () {
+                typeofgraphcostperton = 'range';
+                var yearrange = $("[id*=ddlprodvsopcostfrom]").val() + ',' + $("[id*=ddlprodvsopcostto]").val()
+                LoadChartProductionvsOpertionalCost(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlprodvsopcostto]").bind("change", function () {
+                typeofgraphcostperton = 'range';
+                var yearrange = $("[id*=ddlprodvsopcostfrom]").val() + ',' + $("[id*=ddlprodvsopcostto]").val()
+                LoadChartProductionvsOpertionalCost(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlexpvspwfrom]").bind("change", function () {
+                var yearrange = $("[id*=ddlexpvspwfrom]").val() + ',' + $("[id*=ddlexpvspwto]").val()
+                LoadChartExplosivevsPowderfactor(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlexpvspwto]").bind("change", function () {
+                var yearrange = $("[id*=ddlexpvspwfrom]").val() + ',' + $("[id*=ddlexpvspwto]").val()
+                LoadChartExplosivevsPowderfactor(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlburdenvsspacingfrom]").bind("change", function () {
+                var yearrange = $("[id*=ddlburdenvsspacingfrom]").val() + ',' + $("[id*=ddlburdenvsspacingto]").val()
+                LoadChartBurdenvsspacing(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlburdenvsspacingto]").bind("change", function () {
+                var yearrange = $("[id*=ddlburdenvsspacingfrom]").val() + ',' + $("[id*=ddlburdenvsspacingto]").val()
+                LoadChartBurdenvsspacing(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddloutputpermeterfrom]").bind("change", function () {
+                var yearrange = $("[id*=ddloutputpermeterfrom]").val() + ',' + $("[id*=ddloutputpermeterto]").val()
+
+                LoadChartoutputpermeter(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddloutputpermeterto]").bind("change", function () {
+                var yearrange = $("[id*=ddloutputpermeterfrom]").val() + ',' + $("[id*=ddloutputpermeterto]").val()
+                LoadChartoutputpermeter(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddloutputperholefrom]").bind("change", function () {
+                var yearrange = $("[id*=ddloutputperholefrom]").val() + ',' + $("[id*=ddloutputperholeto]").val()
+
+                LoadChartoutputperhole(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddloutputperholeto]").bind("change", function () {
+                var yearrange = $("[id*=ddloutputperholefrom]").val() + ',' + $("[id*=ddloutputperholeto]").val()
+                LoadChartoutputperhole(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlscfrom]").bind("change", function () {
+                var yearrange = $("[id*=ddlscfrom]").val() + ',' + $("[id*=ddlscto]").val()
+
+                LoadChartspecificcharge(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlscto]").bind("change", function () {
+                var yearrange = $("[id*=ddlscfrom]").val() + ',' + $("[id*=ddlscto]").val()
+
+                LoadChartspecificcharge(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlsdfrom]").bind("change", function () {
+                var yearrange = $("[id*=ddlsdfrom]").val() + ',' + $("[id*=ddlsdto]").val()
+
+                LoadChartspecificdrilling(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=ddlsdto]").bind("change", function () {
+                var yearrange = $("[id*=ddlsdfrom]").val() + ',' + $("[id*=ddlsdto]").val()
+
+                LoadChartspecificdrilling(Company, user, usert, 'range', '', yearrange, extendqry);
+            });
+
+            $("[id*=costpertonetype]").bind("change", function () {
+                if (typeofgraphcostperton == 'all') {
+                    LoadChartProductionvsOpertionalCost(Company, user, usert, 'all', '', '', extendqry);
+                } else if (typeofgraphcostperton == 'month')
+                    LoadChartProductionvsOpertionalCost(Company, user, usert, 'month', '', yearcostperton, extendqry);
+                else if (typeofgraphcostperton == 'month')
+                    LoadChartProductionvsOpertionalCost(Company, user, usert, 'day', monthcostperton, yearcostperton, extendqry);
+                else if (typeofgraphcostperton == 'range') {
+                    var yearrange = $("[id*=ddlprodvsopcostfrom]").val() + ',' + $("[id*=ddlprodvsopcostto]").val()
+                    LoadChartProductionvsOpertionalCost(Company, user, usert, 'range', '', yearrange, extendqry);
+
+                } else if (typeofgraphcostperton == 'DateRange') {
+                    var datefrom = $('#datecostpertonfrom').val();
+                    var dateto = $('#datecostpertonto').val();
+                    //alert("clicked");
+                    datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                    //alert(datewiseextendqry);
+
+                    if (datefrom !== "" && dateto !== "") {
+                        //alert("dafds");
+                        LoadChartProductionvsOpertionalCost(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                    }
+                }
+            });
+
+            $("[id*=pwtype]").bind("change", function () {
+                if (typeofgraphpw == 'all') {
+                    LoadChartExplosivevsPowderfactor(Company, user, usert, 'all', '', '', extendqry);
+                } else if (typeofgraphpw == 'month')
+                    LoadChartExplosivevsPowderfactor(Company, user, usert, 'month', '', yearpw, extendqry);
+                else if (typeofgraphpw == 'month')
+                    LoadChartExplosivevsPowderfactor(Company, user, usert, 'day', monthpw, yearpw, extendqry);
+                else if (typeofgraphpw == 'range') {
+                    var yearrange = $("[id*=ddlexpvspwfrom]").val() + ',' + $("[id*=ddlexpvspwto]").val()
+                    LoadChartExplosivevsPowderfactor(Company, user, usert, 'range', '', yearrange, extendqry);
+
+                } else if (typeofgraphpw == 'DateRange') {
+                    var datefrom = $('#dateexpfrom').val();
+                    var dateto = $('#dateexpto').val();
+                    //alert("clicked");
+                    datewiseextendqry = "and blastdetail.blastdate >= /" + datefrom + "/ and blastdetail.blastdate <= /" + dateto + "/";
+                    //alert(datewiseextendqry);
+
+                    if (datefrom !== "" && dateto !== "") {
+                        //alert("dafds");
+                        LoadChartExplosivevsPowderfactor(Company, user, usert, 'DateRange', '', '', extendqry, datewiseextendqry);
+                    }
+                }
+            });
+        });
+
+        function ddlflyfrom(){}
+
+        function clearfilter() {
+            extendqry = "";
+            loadall();
+            $("[id*=ddlmine]").val("0");
+            $("[id*=ddlpit]").val("0");
+            $("[id*=ddlzone]").val("0");
+            $("[id*=ddlbench]").val("0");
+            $("[id*=ddlrock]").val("0");
+        }
+        function loadMine(companyid, userid, user) {
+
+            $('#ddlmine').find('option').remove().end().append('<option value="0">-Select Mine-</option>').val('0');
+
+            $.ajax({
+                type: "POST",
+                url: apiurl + "getMine",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + user + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+
+
+                    var parsed = JSON.parse(r.d);
+                    var arr = [];
+
+                    for (var i = 0; i < parsed.length; i++) {
+
+                        $('#ddlmine').append('<option value=' + parsed[i].MineCode + '>' + parsed[i].Name + '</option>');
+
+                    }
+
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                }
+            });
+        }
+        function loadrock(Zonecode) {
+            $('#ddlrock').find('option').remove().end().append('<option value="0">-Select Rock-</option>').val('0');
+
+            $.ajax({
+                type: "POST",
+                url: apiurl + "getRock",
+                data: "{zonecode:'" + Zonecode + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+
+                    var parsed = JSON.parse(r.d);
+                    var arr = [];
+
+                    for (var i = 0; i < parsed.length; i++) {
+
+                        $('#ddlrock').append('<option value=' + parsed[i].RockCode + '>' + parsed[i].RockName + '</option>');
+
+                    }
+
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                }
+            });
+        }
+        function loadyear(companyid, userid, user) {
+
+            $.ajax({
+                type: "POST",
+                url: apiurl + "getyear",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + user + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+
+                    var labels = [];
+                    var series1 = [];
+                    var series2 = [];
+                    var parsed = JSON.parse(r.d);
+                    var arr = [];
+
+                    for (var i = 0; i < parsed.length; i++) {
+
+                        $('#ddloperationcostfrom').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#ddloperationcostto').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+
+                         $('#ddloperationcostfromTotal').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#ddloperationcosttoTotal').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+
+
+                        $('#ddlprodvsopcostfrom').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#ddlprodvsopcostto').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+                        $('#ddlexpvspwfrom').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#ddlexpvspwto').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+                        $('#Gddlblstperfrom').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#Gddlblstperto').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+                        $('#ddlburdenvsspacingfrom').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#ddlburdenvsspacingto').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+                        $('#ddloutputperholefrom').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#ddloutputperholeto').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+                        $('#ddloutputpermeterfrom').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#ddloutputpermeterto').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+                        $('#ddlblstperfromfly').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#ddlblstpertofly').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+
+                        $('#ddlscfrom').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#ddlscto').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+                        $('#ddlsdfrom').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+                        $('#ddlsdto').append('<option value=' + parsed[i].year + '>' + parsed[i].year + '</option>');
+
+
+                    }
+
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+        function loadPit(minecode) {
+            $('#ddlpit').find('option').remove().end().append('<option value="0">-Select Pit-</option>').val('0');
+
+
+            $.ajax({
+                type: "POST",
+                url: apiurl + "getPit",
+                data: "{minecode: '" + minecode + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+
+
+                    var parsed = JSON.parse(r.d);
+                    var arr = [];
+
+                    for (var i = 0; i < parsed.length; i++) {
+
+                        $('#ddlpit').append('<option value=' + parsed[i].PitCode + '>' + parsed[i].Name + '</option>');
+
+                    }
+
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                }
+            });
+        }
+        function loadZone(pitcode) {
+            $('#ddlzone').find('option').remove().end().append('<option value="0">-Select Zone-</option>').val('0');
+
+
+            $.ajax({
+                type: "POST",
+                url: apiurl + "getZone",
+                data: "{pitcode: '" + pitcode + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+
+
+                    var parsed = JSON.parse(r.d);
+                    var arr = [];
+
+                    for (var i = 0; i < parsed.length; i++) {
+
+                        $('#ddlzone').append('<option value=' + parsed[i].ZoneCode + '>' + parsed[i].Name + '</option>');
+
+                    }
+
+
+                },
+                failure: function (response) {
+                    // alert('There was an error.');
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                }
+            });
+        }
+        function loadbench(Zonecode) {
+            $('#ddlbench').find('option').remove().end().append('<option value="0">-Select Bench-</option>').val('0');
+
+
+            $.ajax({
+                type: "POST",
+                url: apiurl + "getBench",
+                data: "{zonecode: '" + Zonecode + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+
+
+                    var parsed = JSON.parse(r.d);
+                    var arr = [];
+
+                    for (var i = 0; i < parsed.length; i++) {
+
+                        $('#ddlbench').append('<option value=' + parsed[i].BenchCode + '>' + parsed[i].Name + '</option>');
+
+                    }
+
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    //alert(response.responseText);
+                }
+            });
+        }
+        function LoadChartOpertionalCost(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+            var year2;
+
+            $("#iframeloading").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "opertaionalcostofblast",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    $("#iframeloading").hide();
+                    var labels = [];
+                    var explosive = [];
+                    var drillcost = [];
+                    var manpowercost = [];
+                    var initiator = [];
+                    var parsed = JSON.parse(r.d);
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+                        explosive.push(parsed[x].Explosive)
+                        drillcost.push(parsed[x].DrillCost)
+                        manpowercost.push(parsed[x].manpowercost)
+                        initiator.push(parsed[x].initiator_cost)
+
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#ddloperationcostto option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+                    }
+
+
+                    Highcharts.chart('containerBlastCost', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: labels,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+
+                                        LoadChartOpertionalCost(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            year2 = labels[this.value]
+                                            LoadChartOpertionalCost(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            var str = labels[this.value];
+                                            var n = str.includes("/");
+                                            var m = str.includes(" ");
+                                            //alert(n);
+                                            if (n == false && m == false)
+                                                LoadChartOpertionalCost(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        },
+                        yAxis: {
+                            labels: {
+                                formatter: function () {
+                                    return countrysymbol + this.axis.defaultLabelFormatter.call(this);
+                                }
+                            },
+
+                            title: {
+                                text: 'Cost'
+                            },
+                            stackLabels: {
+                                enabled: true,
+                                style: {
+                                    fontWeight: 'bold',
+                                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+
+                                }, formatter: function () {
+                                    return countrysymbol + this.total;
+                                }
+                            }
+                        },
+
+                        tooltip: {
+                            headerFormat: '<b>{point.x}</b><br/>',
+                            pointFormat: '{series.name}: ' + countrysymbol + '{point.y}<br/>Total: ' + countrysymbol + '{point.stackTotal}'
+                        },
+                        plotOptions: {
+                            column: {
+                                stacking: 'normal',
+                                dataLabels: {
+                                    enabled: true,
+                                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                                    format: countrysymbol + ' {y} '
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Explosive',
+                            data: explosive
+                        }, {
+                            name: 'Initiator',
+                            data: initiator
+                        }, {
+                            name: 'Drilling',
+                            data: drillcost
+                        },
+                        {
+                            name: 'Manpower',
+                            data: manpowercost
+                        }]
+                    });
+
+                },
+                failure: function (response) {
+                    // alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+        function LoadChartProductionvsOpertionalCost(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+
+            var year2;
+            $("#iframeloading2").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "productionvsopertaionalcostofblast",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    $("#iframeloading2").hide();
+
+                    var labels = [];
+                    var opertanalcost = [];
+                    var Production = [];
+                    var costperton = [];
+                    var costpertontheory = [];
+
+                    var parsed = JSON.parse(r.d);
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+                        opertanalcost.push(parsed[x].opertanalcost)
+                        Production.push(parsed[x].Production)
+
+                        costperton.push(parsed[x].costperton == null ? 'null' : parsed[x].costperton)
+                        costpertontheory.push(parsed[x].costpertontheortical)
+
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#ddlprodvsopcostto option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+
+                    }
+                    var h = $('#costpertonetype').val();
+                  
+                    var temp = fitData(costperton).data1;
+                 
+                    if (temp.length < costperton.length)
+                    {
+                        if (costperton[0] == 'null')
+                            temp.splice(0, 0, 'null');
+                    }
+
+                    
+
+
+
+                    if (h == "theory") {
+                        var jsonStringReturnByAPI = '[{"name": "Cost Per Ton on Theoretical","type": "line","marker": { "enabled": false },"data": [' + costpertontheory + '], "tooltip":{ "valueSuffix": " Per Ton","valuePrefix":"' + countrysymbol + '"}},{"name": "TrendLine for Cost Per Ton on Theoretical","type":"line","dashStyle": "ShortDashDot" , "marker": { "enabled": "false" },"data": [' + fitData(costpertontheory).data1 + '], "tooltip": { "valueSuffix": "Per Ton","valuePrefix":"' + countrysymbol + '"}}]';
+                    } else if (h == "Actual") {
+                        var jsonStringReturnByAPI = '[{"name": "Cost Per Ton on Actual","type": "line","marker": { "enabled": false },"data": [' + costperton + '], "tooltip":{ "valueSuffix": " Per Ton","valuePrefix":"' + countrysymbol + '"}},{"name": "TrendLine for Cost Per Ton on Actual","type":"line","dashStyle": "ShortDashDot" ,"marker": { "enabled": "false" },"data": [' + temp + '], "tooltip": { "valueSuffix": "Per Ton","valuePrefix":"' + countrysymbol + '"}}]';
+                    } else {
+                        var jsonStringReturnByAPI = '[{"name": "Cost Per Ton on Actual","type": "line","marker": { "enabled": false },"data": [' + costperton + '], "tooltip":{ "valueSuffix": " Per Ton","valuePrefix":"' + countrysymbol + '"}},{"name": "TrendLine for Cost Per Ton on Actual","type":"line","dashStyle": "ShortDashDot" ,"marker": { "enabled": "false" },"data": [' + temp + '], "tooltip": { "valueSuffix": "Per Ton","valuePrefix":"' + countrysymbol + '"}},{"name": "Cost Per Ton on Theoretical","type": "line","marker": { "enabled": false },"data": [' + costpertontheory + '], "tooltip":{ "valueSuffix": " Per Ton","valuePrefix":"' + countrysymbol + '"}},{"name": "TrendLine for Cost Per Ton on Theoretical","type":"line","dashStyle": "ShortDashDot" ,"marker": { "enabled": "false" },"data": [' + fitData(costpertontheory).data1 + '], "tooltip": { "valueSuffix": "Per Ton","valuePrefix":"' + countrysymbol + '"}}]';
+                    }
+
+
+                    Highcharts.chart('containerproductionvsBlastCost', {
+                        chart: {
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: [{
+                            categories: labels,
+                            crosshair: true,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+                                        typeofgraphcostperton = 'all';
+                                        LoadChartProductionvsOpertionalCost(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            year2 = labels[this.value];
+                                            yearcostperton = labels[this.value];
+                                            typeofgraphcostperton = 'month';
+                                            LoadChartProductionvsOpertionalCost(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            var str = labels[this.value];
+                                            monthcostperton = str;
+                                            typeofgraphcostperton = 'day';
+                                            var n = str.includes("/");
+                                            //alert(n);
+                                            if (n == false)
+                                                LoadChartProductionvsOpertionalCost(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }],
+                        yAxis: [
+                           {
+                               step: 10,
+                               min: 0,
+
+                               tickInterval: 2,
+                               labels: {
+                                   formatter: function () {
+                                       return countrysymbol + this.axis.defaultLabelFormatter.call(this);
+                                   }
+                               },
+                               title: {
+                                   text: 'Cost Per Ton'
+                               }
+                           }],
+                        tooltip: {
+                            shared: true
+                        },
+                        series: JSON.parse(jsonStringReturnByAPI)
+                    });
+
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+        function LoadChartoutputpermeter(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+
+            var year2;
+            $("#iframeloading4").show();
+            //$("#iframeloading2").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "getoutputpermeter",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+
+                    $("#iframeloading4").hide();
+                    var labels = [];
+                    var outphole = [];
+
+                    var meteregeblasted = [];
+                    var parsed = JSON.parse(r.d);
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+                        outphole.push(parsed[x].Outputperhole);
+                        meteregeblasted.push(parsed[x].meteregeblasted);
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#ddloutputpermeterto option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+
+                    }
+
+                    Highcharts.chart('containeroutputpermeter', {
+                        chart: {
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: [{
+                            categories: labels,
+                            crosshair: true,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+
+                                        LoadChartoutputpermeter(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            year2 = labels[this.value]
+
+                                            LoadChartoutputpermeter(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            var str = labels[this.value];
+                                            var n = str.includes("/");
+                                            //alert(n);
+                                            if (n == false)
+                                                LoadChartoutputpermeter(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }],
+                        yAxis:
+                            [
+                                {
+                                    min: 10,
+
+                                    tickInterval: 10,// Primary yAxis
+                                    labels: {
+                                        formatter: function () {
+                                            return this.axis.defaultLabelFormatter.call(this) + ' Tonne';
+                                        }
+                                    },
+                                    title: {
+                                        text: 'Production Per Meter'
+                                    }
+                                }, { // Secondary yAxis
+                                    title: {
+                                        text: 'Meterage Blasted',
+                                        style: {
+                                            color: Highcharts.getOptions().colors[1]
+                                        }
+                                    },
+                                    labels: {
+                                        formatter: function () {
+                                            return this.axis.defaultLabelFormatter.call(this);
+                                        },
+                                        style: {
+                                            color: Highcharts.getOptions().colors[0]
+                                        }
+                                    },
+                                    opposite: true,
+
+                                }],
+                        tooltip: {
+                            shared: true
+                        },
+
+                        series: [{
+                            name: 'Production Per Meter',
+                            type: 'spline',
+                            yAxis: 0,
+                          
+                            data: outphole,
+                            tooltip:
+                                {
+
+                                    valueSuffix: ' Tonne',
+
+                                }
+
+                        }, {
+                            name: 'TrendLine for Production Per Meter',
+                            type: 'line',
+                            dashStyle: 'ShortDashDot',
+                            marker: { enabled: false },
+                            /* function returns data for trend-line */
+                            data: (function () {
+                                return fitData(outphole).data;
+                            })()
+                        },
+                        {
+                            name: 'Meterage Blasted',
+                            type: 'spline',
+                            yAxis: 1,
+                            data: meteregeblasted,
+                            tooltip:
+                                {
+
+                                    valueSuffix: ' Meter Blasted',
+
+                                }
+
+                        }]
+                    });
+
+                },
+                failure: function (response) {
+                    // alert('There was an error.');
+                },
+                error: function (response) {
+
+                }
+            });
+        }
+        function LoadChartoutputperhole(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+
+            var year2;
+            //$("#iframeloading2").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "getoutputperHole",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    //$("#iframeloading2").hide();
+
+                    var labels = [];
+                    var outphole = [];
+                    var holeblasted = [];
+                    var parsed = JSON.parse(r.d);
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+                        outphole.push(parsed[x].Outputperhole)
+                        holeblasted.push(parsed[x].holeblasted)
+
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#ddloutputperholeto option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+
+                    }
+
+                    Highcharts.chart('containerproductionperhole', {
+                        chart: {
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: [{
+                            categories: labels,
+                            crosshair: true,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+
+                                        LoadChartoutputperhole(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            year2 = labels[this.value]
+
+                                            LoadChartoutputperhole(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            var str = labels[this.value];
+                                            var n = str.includes("/");
+                                            //alert(n);
+                                            if (n == false)
+                                                LoadChartoutputperhole(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }],
+                        yAxis: [{ // Primary yAxis
+                            labels: {
+                                formatter: function () {
+                                    return this.axis.defaultLabelFormatter.call(this) + 'Ton';
+                                }
+                            },
+                            title: {
+                                text: 'Production Per Hole'
+                            }, min: 200,
+
+                            tickInterval: 1000
+                        }, { // Secondary yAxis
+                            title: {
+                                text: 'Hole Blasted',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            },
+                            labels: {
+                                formatter: function () {
+                                    return this.axis.defaultLabelFormatter.call(this);
+                                },
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            opposite: true
+                        }],
+                        tooltip: {
+                            shared: true
+                        },
+
+                        series: [{
+                            name: 'Production Per Hole',
+                            type: 'spline',
+                            yAxis: 0,
+                        
+                            data: outphole,
+                            tooltip:
+                                {
+
+                                    valueSuffix: ' Ton',
+
+                                }
+
+                        }, {
+                            name: 'TrendLine for Production  Per Hole',
+                            type: 'line',
+                            dashStyle: 'ShortDashDot',
+                            marker: { enabled: false },
+                            /* function returns data for trend-line */
+                            data: (function () {
+                                return fitData(outphole).data;
+                            })()
+                        }, {
+                            name: 'Hole Blasted',
+                            type: 'spline',
+                            yAxis: 1,
+                            data: holeblasted,
+                            tooltip:
+                                {
+
+                                    valueSuffix: ' Hole Blasted',
+
+                                }
+
+                        }
+                        ]
+                    });
+
+                },
+                failure: function (response) {
+                    // alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+        function LoadChartExplosivevsPowderfactor(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+
+            var year2;
+            $("#iframeloading3").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "Explosivevspowderfactor",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    $("#iframeloading3").hide();
+
+                    var labels = [];
+                    var Explosive = [];
+                    var powderfactor = [];
+                    var tpowderfactor = [];
+                    var parsed = JSON.parse(r.d);
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+                        Explosive.push(parsed[x].explosives)
+                        powderfactor.push(parsed[x].powderfactors == null ? 'null' : parsed[x].powderfactors)
+                        tpowderfactor.push(parsed[x].Theoreticalpw)
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#ddlexpvspwto option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+
+                    }
+                    var h = $('#pwtype').val();
+
+
+
+                    if (h == "theory") {
+                        var jsonStringReturnByAPI = '[{"name":"Theoretical Powder factor","type":"spline","yAxis": 1,"data":[' + tpowderfactor + '],"tooltip": {"valueSuffix": " Ton/Kg"}},{"name": "TrendLine for Theoretical Powder factor","yAxis": 1,"type":"line","marker": { "enabled": "false" },"data": [' + fitData(tpowderfactor).data1 + '],"dashStyle": "ShortDashDot" ,"tooltip": { "valueSuffix": "Ton/Kg"}},{"name": "Explosive","type": "column","color": "rgba(245, 2, 0, 0.50)","data":[' + Explosive + '],"tooltip": {"valueSuffix": "Kg"}}]';
+                    } else if (h == "Actual") {
+                        var jsonStringReturnByAPI = '[{"name":"Actual Powder factor","type":"spline","yAxis": 1,"data":[' + powderfactor + '],"tooltip": {"valueSuffix": " Ton/Kg"}},{"name": "TrendLine for Actual Powder factor","yAxis": 1,"type":"line","marker": { "enabled": "false" },"data": [' + fitData(powderfactor).data1 + '],"dashStyle": "ShortDashDot" ,"tooltip": { "valueSuffix": "Ton/Kg"}},{"name": "Explosive","type": "column","color": "rgba(245, 2, 0, 0.50)","data":[' + Explosive + '],"tooltip": {"valueSuffix": "Kg"}}]';
+                    } else {
+                        var jsonStringReturnByAPI = '[{"name":"Theoretical Powder factor","type":"spline","yAxis": 1,"data":[' + tpowderfactor + '],"tooltip": {"valueSuffix": " Ton/Kg"}},{"name": "TrendLine for Theoretical Powder factor","yAxis": 1,"type":"line","marker": { "enabled": "false" },"data": [' + fitData(tpowderfactor).data1 + '],"dashStyle": "ShortDashDot" ,"tooltip": { "valueSuffix": "Ton/Kg"}},{"name":"Actual Powder factor","type":"spline","yAxis": 1,"data":[' + powderfactor + '],"tooltip": {"valueSuffix": " Ton/Kg"}},{"name": "TrendLine for Actual Powder factor","yAxis": 1,"type":"line","marker": { "enabled": "false" },"data": [' + fitData(powderfactor).data1 + '],"dashStyle": "ShortDashDot" ,"tooltip": { "valueSuffix": "Ton/Kg"}},{"name": "Explosive","type": "column","color": "rgba(245, 2, 0, 0.50)","data":[' + Explosive + '],"tooltip": {"valueSuffix": "Kg"}}]';
+                    }
+
+                    Highcharts.chart('containerExplosivevsPowderfactor', {
+                        chart: {
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: [{
+                            categories: labels,
+                            crosshair: true,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+                                        typeofgraphpw = 'all';
+                                        LoadChartExplosivevsPowderfactor(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            typeofgraphpw = 'month';
+                                            yearpw = labels[this.value];
+                                            year2 = labels[this.value];
+
+                                            LoadChartExplosivevsPowderfactor(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            typeofgraphpw = 'day';
+                                            var str = labels[this.value];
+                                            var n = str.includes("/");
+                                            monthpw = labels[this.value];
+                                            //alert(n);
+                                            if (n == false)
+                                                LoadChartExplosivevsPowderfactor(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+                                    }
+                                }
+                            }
+                        }],
+                        yAxis: [{ // Primary yAxis
+                            labels: {
+                                formatter: function () {
+                                    return this.axis.defaultLabelFormatter.call(this) + ' Kg';
+                                }
+                            },
+                            title: {
+                                text: 'Explosive Consumption ',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            }
+                        }, { // Secondary yAxis
+                            title: {
+                                text: 'Powder Factor',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            labels: {
+                                format: '{value}' + '  Ton/Kg',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            opposite: true,
+                            min: 1,
+
+                            tickInterval: 3
+                        }],
+                        tooltip: {
+                            shared: true
+                        },
+
+                        series: JSON.parse(jsonStringReturnByAPI)
+                    });
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+        function LoadChartperformance(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+
+            var year2;
+            $("#iframeloading3").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "blastperformence",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    $("#iframeloading3").hide();
+
+                    var labels = [];
+                    var flyrock = [];
+                    var ppv = [];
+                    var airblast = [];
+                    var parsed = JSON.parse(r.d);
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+                        ppv.push(parsed[x].ppv)
+                        airblast.push(parsed[x].AirBlast)
+                        flyrock.push(parsed[x].flyrock)
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#Gddlblstperto option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+                    }
+
+
+                    Highcharts.chart('containerblastperformence', {
+                        chart: {
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: [{
+                            categories: labels,
+                            crosshair: true,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+
+                                        LoadChartperformance(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            year2 = labels[this.value]
+
+                                            LoadChartperformance(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            var str = labels[this.value];
+                                            var n = str.includes("/");
+                                            //alert(n);
+                                            if (n == false)
+                                                LoadChartperformance(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }],
+                        yAxis: [{ // Primary yAxis
+                            labels: {
+                                formatter: function () {
+                                    return this.axis.defaultLabelFormatter.call(this) + ' mm/s';
+                                }
+                            },
+                            title: {
+                                text: 'Ground Vibration (mm/s)',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            }
+                        }, { // Secondary yAxis
+                            title: {
+                                text: 'Air Vibration (dbl)',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            labels: {
+                                format: '{value}' + '  dbl',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            opposite: true,
+                            min: 1,
+
+                            tickInterval: 3
+                        }],
+                        tooltip: {
+                            shared: true
+                        },
+
+                        series: [
+                            {
+                                name: 'Air Blast',
+                                type: 'spline',
+                                yAxis: 1,
+                                data: airblast,
+                                tooltip: {
+                                    valueSuffix: ' dbl'
+                                }
+
+                            },
+                            {
+                                name: 'Ground Vibration',
+                                type: 'spline',
+
+                                data: ppv,
+                                tooltip: {
+                                    valueSuffix: ' mm/s'
+                                }
+                            }
+                        ]
+                    });
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+        function LoadChartBurdenvsspacing(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+
+            var year2;
+            $("#iframeloading4").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "Burdenvsspacingvscost",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    $("#iframeloading4").hide();
+
+                    var labels = [];
+                    var burden = [];
+                    var spacing = [];
+                    var stem = [];
+                    var cost = [];
+                    var parsed = JSON.parse(r.d);
+
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+                        burden.push(parsed[x].Burden)
+                        spacing.push(parsed[x].Spacing)
+                        stem.push(parsed[x].stemlen)
+                        cost.push(parsed[x].opertanalcost)
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#ddlburdenvsspacingto option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+                    }
+
+
+                    Highcharts.chart('containerburdenspacing', {
+                        chart: {
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: [{
+                            categories: labels,
+                            crosshair: true,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+
+                                        LoadChartBurdenvsspacing(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            year2 = labels[this.value]
+
+                                            LoadChartBurdenvsspacing(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            var str = labels[this.value];
+                                            var n = str.includes("/");
+                                            //alert(n);
+                                            if (n == false)
+                                                LoadChartBurdenvsspacing(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }],
+                        yAxis: [{ // Primary yAxis
+                            labels: {
+                                format: '{value} m',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            },
+                            title: {
+                                text: 'Burden and Spacing',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            }
+                        }, { // Secondary yAxis
+                            title: {
+                                text: '',
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            labels: {
+                                formatter: function () {
+                                    return countrysymbol + this.axis.defaultLabelFormatter.call(this);
+                                },
+                                style: {
+                                    color: Highcharts.getOptions().colors[0]
+                                }
+                            },
+                            opposite: true
+                        }],
+                        tooltip: {
+                            shared: true
+                        },
+
+                        series: [
+                            {
+                                name: 'Burden',
+                                type: 'column',
+                                color: 'rgba(39, 81, 150, 0.50)',
+                                data: burden,
+                                tooltip: {
+                                    valueSuffix: ' m'
+                                },
+                            },
+                            {
+                                name: 'Spacing',
+                                type: 'column',
+                                color: 'rgba(80, 183, 82, 0.90)',
+                                data: spacing,
+                                tooltip: {
+                                    valueSuffix: ' m'
+                                },
+                            }, {
+                                name: 'Stemming',
+                                type: 'column',
+                                color: 'rgba(255, 165, 0, 0.90)',
+                                data: stem,
+                                tooltip: {
+                                    valueSuffix: ' m'
+                                },
+                            }
+                        ]
+                    });
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+        function LoadChartperformanceflyrock(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+
+            var year2;
+            $("#iframeloading3").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "blastperformence",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    $("#iframeloading3").hide();
+
+                    var labels = [];
+                    var flyrock = [];
+                    var ppv = [];
+                    var airblast = [];
+                    var parsed = JSON.parse(r.d);
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+                        ppv.push(parsed[x].ppv)
+                        airblast.push(parsed[x].AirBlast)
+                        flyrock.push(parsed[x].flyrock)
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#ddlblstpertofly option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+                    }
+
+                    Highcharts.chart('containerblastperformencefly', {
+                        chart: {
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: [{
+                            categories: labels,
+                            crosshair: true,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+                                        LoadChartperformanceflyrock(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            year2 = labels[this.value]
+
+                                            LoadChartperformanceflyrock(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            var str = labels[this.value];
+                                            var n = str.includes("/");
+                                            //alert(n);
+                                            if (n == false)
+                                                LoadChartperformanceflyrock(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }],
+                        yAxis: [{ // Primary yAxis
+                            labels: {
+                                formatter: function () {
+                                    return this.axis.defaultLabelFormatter.call(this) + ' m';
+                                }
+                            },
+                            title: {
+                                text: 'FlyRock (m)',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            }
+                        }],
+                        tooltip: {
+                            shared: true
+                        },
+
+                        series: [
+
+                            {
+                                name: 'FlyRock',
+                                type: 'spline',
+
+                                data: flyrock,
+                                tooltip: {
+                                    valueSuffix: ' m'
+                                }
+                            }
+                        ]
+                    });
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+        function LoadChartspecificcharge(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+
+            var year2;
+            $("#iframeloading5").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "getspecificcharge",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    $("#iframeloading5").hide();
+
+                    var labels = [];
+                    var specificcharge = [];
+
+                    var parsed = JSON.parse(r.d);
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+
+                        specificcharge.push(parsed[x].specificcharge)
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#ddlscto option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+                    }
+
+                    Highcharts.chart('containersc', {
+                        chart: {
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: [{
+                            categories: labels,
+                            crosshair: true,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+                                        LoadChartspecificcharge(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            year2 = labels[this.value]
+
+                                            LoadChartspecificcharge(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            var str = labels[this.value];
+                                            var n = str.includes("/");
+                                            //alert(n);
+                                            if (n == false)
+                                                LoadChartspecificcharge(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }],
+                        yAxis: [{ // Primary yAxis
+                            labels: {
+                                formatter: function () {
+                                    return this.axis.defaultLabelFormatter.call(this) + ' ';
+                                }
+                            },
+                            title: {
+                                text: 'Specific Charge (m3 x 10^-4)',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            }
+                        }],
+                        tooltip: {
+                            shared: true
+                        },
+
+                        series: [
+
+                            {
+                                name: 'Specific Charge',
+                                type: 'spline',
+
+                                data: specificcharge,
+                                tooltip: {
+                                    valueSuffix: ' (m3 x 10^-4)'
+                                }
+                            }, {
+                                name: 'TrendLine for Specific Charge',
+                                type: 'line',
+                                dashStyle: 'ShortDashDot',
+                                marker: { enabled: false },
+                                /* function returns data for trend-line */
+                                data: (function () {
+                                    return fitData(specificcharge).data;
+                                })()
+                            }
+                        ]
+                    });
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+        function LoadChartspecificdrilling(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+
+            var year2;
+            $("#iframeloading5").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "getspecificdrilling",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    $("#iframeloading5").hide();
+
+                    var labels = [];
+                    var specificdrilling = [];
+
+                    var parsed = JSON.parse(r.d);
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+
+                        specificdrilling.push(parsed[x].specificdrilling)
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#ddlblstpertofly option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+                    }
+
+                    Highcharts.chart('containersd', {
+                        chart: {
+                            zoomType: 'xy'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        subtitle: {
+                            text: ''
+                        },
+                        xAxis: [{
+                            categories: labels,
+                            crosshair: true,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+                                        LoadChartspecificdrilling(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            year2 = labels[this.value]
+
+                                            LoadChartspecificdrilling(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            var str = labels[this.value];
+                                            var n = str.includes("/");
+                                            //alert(n);
+                                            if (n == false)
+                                                LoadChartspecificdrilling(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+
+                                    }
+                                }
+                            }
+                        }],
+                        yAxis: [{ // Primary yAxis
+                            labels: {
+                                formatter: function () {
+                                    return this.axis.defaultLabelFormatter.call(this) + '';
+                                }
+                            },
+                            title: {
+                                text: 'Specific Drilling (m3 x 10^-4)',
+                                style: {
+                                    color: Highcharts.getOptions().colors[1]
+                                }
+                            }
+                        }],
+                        tooltip: {
+                            shared: true
+                        },
+
+                        series: [
+
+                            {
+                                name: 'Spacific Drilling',
+                                type: 'spline',
+
+                                data: specificdrilling,
+                                tooltip: {
+                                    valueSuffix: '(m3 x 10^-4)'
+                                }
+                            }, {
+                                name: 'TrendLine for Specific Drilling',
+                                type: 'line',
+                                dashStyle: 'ShortDashDot',
+                                marker: { enabled: false },
+                                /* function returns data for trend-line */
+                                data: (function () {
+                                    return fitData(specificdrilling).data;
+                                })()
+                            }
+                        ]
+                    });
+
+                },
+                failure: function (response) {
+                    //alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+
+
+
+         function LoadChartOpertionalCostTotal(companyid, userid, usertype, criteria, month, year, exqry, datewiseexqry) {
+            var year2;
+
+            $("#iframeloading").show();
+            $.ajax({
+                type: "POST",
+                url: apiurl + "Totalopertaionalcostofblast",
+                data: "{userid: '" + userid + "',companyid:'" + companyid + "',usertype:'" + usertype + "',criteria:'" + criteria + "',month:'" + month + "',year:'" + year + "',extendqry:'" + exqry + "',datetrangefilter:'" + datewiseexqry + "'}",
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    $("#iframeloading").hide();
+                    var labels = [];
+                    var explosive = [];
+                    var drillcost = [];
+                    var manpowercost = [];
+                    var initiator = [];
+                    var parsed = JSON.parse(r.d);
+                    if (parsed.length > 0) {
+                        if (parsed[0].year !== 'undefined') {
+                            year2 = parsed[0].year;
+                        }
+                    }
+                    var arr = [];
+
+                    for (var x in parsed) {
+                        labels.push(parsed[x].chartlable);
+                        explosive.push(parsed[x].Explosive)
+                        drillcost.push(parsed[x].DrillCost)
+                        manpowercost.push(parsed[x].manpowercost)
+                        initiator.push(parsed[x].initiator_cost)
+
+                        if (typeof parsed[x].chartlable == 'number') {
+
+                            $('#ddloperationcosttoTotal option[value=' + parsed[x].chartlable + ']').prop('selected', true);
+                        }
+                    }
+
+
+                    Highcharts.chart('containerBlastCostTotal', {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: ''
+                        },
+                        xAxis: {
+                            categories: labels,
+                            labels: {
+                                events: {
+                                    contextmenu: function () {
+
+                                        LoadChartOpertionalCostTotal(Company, user, usert, 'all', '', '', extendqry);
+                                    },
+                                    click: function () {
+
+                                        //alert(typeof labels[this.value])
+                                        if (typeof labels[this.value] == 'number') {
+                                            year2 = labels[this.value]
+                                            LoadChartOpertionalCostTotal(Company, user, usert, 'month', '', labels[this.value], extendqry);
+                                        }
+                                        else {
+                                            var str = labels[this.value];
+                                            var n = str.includes("/");
+                                            var m = str.includes(" ");
+                                            //alert(n);
+                                            if (n == false && m == false)
+                                                LoadChartOpertionalCostTotal(Company, user, usert, 'day', labels[this.value], year2, extendqry);
+                                        }
+
+                                    }
+                                }
+                            }
+
+                        },
+                        yAxis: {
+                            labels: {
+                                formatter: function () {
+                                    return countrysymbol + this.axis.defaultLabelFormatter.call(this);
+                                }
+                            },
+
+                            title: {
+                                text: 'Cost'
+                            },
+                            stackLabels: {
+                                enabled: true,
+                                style: {
+                                    fontWeight: 'bold',
+                                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
+
+                                }, formatter: function () {
+                                    return countrysymbol + this.total;
+                                }
+                            }
+                        },
+
+                        tooltip: {
+                            headerFormat: '<b>{point.x}</b><br/>',
+                            pointFormat: '{series.name}: ' + countrysymbol + '{point.y}<br/>Total: ' + countrysymbol + '{point.stackTotal}'
+                        },
+                        plotOptions: {
+                            column: {
+                                stacking: 'normal',
+                                dataLabels: {
+                                    enabled: true,
+                                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white',
+                                    format: countrysymbol + ' {y} '
+                                }
+                            }
+                        },
+                        series: [{
+                            name: 'Explosive',
+                            data: explosive
+                        }, {
+                            name: 'Initiator',
+                            data: initiator
+                        }, {
+                            name: 'Drilling',
+                            data: drillcost
+                        },
+                        {
+                            name: 'Manpower',
+                            data: manpowercost
+                        }]
+                    });
+
+                },
+                failure: function (response) {
+                    // alert('There was an error.');
+                },
+                error: function (response) {
+                    // alert(response.responseText);
+                }
+            });
+        }
+
+    </script>
+</head>
+<body>
+    <script src="js/highcharts.js"></script>
+    <script src="js/exporting.js"></script>
+    <script src="js/customEvents.js"></script>
+    <script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
+
+    <section id="main-content">
+        <div class="panel panel-default">
+            <div class="panel-heading">Filter</div>
+            <div class="panel-body">
+
+                <div class="col-lg-3 col-md-2 col-sm-2 col-xs-6">
+                    Select Mine <select id="ddlmine" class="form-control" style="display:inline;"></select>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    Select Pit
+                    <select id="ddlpit" class="form-control" style="display:inline;"></select>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    Select Zone <select id="ddlzone" class="form-control" style="display:inline;"></select>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    Select Bench <select id="ddlbench" class="form-control" style="display:inline;"></select>
+                </div>
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-12 rtbrdr bbbrdr">
+
+                    Select Rock <select id="ddlrock" class="form-control" style="display:inline; margin-bottom: 5px;"></select>
+
+                </div>
+                <div class="col-lg-1 col-md-2 col-sm-2 col-xs-6 mgtop20">
+                    <button id="btnclear" value="Clear Filer" onclick="clearfilter()" class="btn btn-danger"><i class="fa fa-filter" aria-hidden="true"></i> Clear</button>
+                </div>
+
+            </div>
+        </div>
+
+        <section class="wrapper">
+
+            <div id="page-wrapper">
+
+                <div class="row" style="margin-top: 20px;">
+                    <div id="iframeloading" style="display: none;z-index:999; position: relative; top: 150px; left: 0px; width: 100%; height: 100%;">
+
+                        <img src="image/giphy.gif" height="128" width="128" alt="loading" class="ajax-loader" />
+                    </div>
+                    <div id="iframeloading4" style="display: none;z-index:999; position: relative; top: 1250px; left: 0px; width: 100%; height: 100%;">
+
+                        <img src="image/giphy.gif" height="128" width="128" alt="loading" class="ajax-loader" />
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">AVERAGE BLASTING COST</h3>
+
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 helpicon">
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalblastcost"><i class="glyphicon glyphicon-info-sign"></i></button>
+
+                                    </div>
+
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter
+                                        <select id="ddlfilterblastcost" class="form-control" onchange="filteroption('1')">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Date Wise</option>
+                                        </select>    <!--<button id="btnblastcost" value="Click">Click</button>-->
+                                    </div>
+                                    <div id="blastcostdivyearwise" style="display:inline;"> <div class="col-md-4 col-sm-4 col-xs-12"> Start Year <select id="ddloperationcostfrom" class="form-control"></select></div> <div class="col-md-4 col-sm-4 col-xs-12">To <select id="ddloperationcostto" class="form-control"></select></div></div>
+                                    <div id="blastcostdivdatewise" style="display:none;"> <div class="col-md-4 col-sm-4 col-xs-12">   Start Date <input type="text" id="dateblastcostfrom" class="form-control" /></div><div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="dateblastcostto" class="form-control" /></div></div>
+
+                                </div>
+
+
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containerBlastCost" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!-- /.panel-body -->
+                        <!-- /.panel -->
+                        <!-- /.panel -->
+
+
+
+
+                        <div id="iframeloading2" style="display: none;z-index:999; position: relative; top: 150px; left: 0px; width: 100%; height: 100%;">
+
+                            <img src="image/giphy.gif" height="128" width="128" alt="loading" class="ajax-loader" />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding:0px;">
+                                        <h3 class="panel-title">BLAST COST PER TON</h3>
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 helpicon" style="margin-top:0px;text-align: right;padding: 0px;">
+                                        <select id="costpertonetype">
+                                            <option value="theory">Theoretical</option>
+                                            <option value="Actual">Actual</option>
+                                            <option value="both">Both</option>
+                                        </select>
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalcost"><i class="glyphicon glyphicon-info-sign"></i></button>
+                                    </div>
+                                    <div class="clearfix">
+                                    </div>
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter
+                                        <select id="ddlfiltercostperton" class="form-control" onchange="filteroption('2')">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Date Wise</option>
+                                        </select>
+                                    </div>
+                                    <div id="costpertondivyearwise" style="display:inline;"><div class="col-md-4 col-sm-4 col-xs-12">   Start Year <select id="ddlprodvsopcostfrom" class="form-control"></select></div> <div class="col-md-4 col-sm-4 col-xs-12">To <select id="ddlprodvsopcostto" class="form-control"></select></div></div>
+                                    <div id="costpertondivdatewise" style="display:none;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">  Start Date <input type="text" id="datecostpertonfrom" class="form-control" /></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="datecostpertonto" class="form-control" /></div>
+                                    </div>
+                                </div>
+
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containerproductionvsBlastCost" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                </div>
+                                <!-- /.panel-body -->
+                            </div>
+                            <!-- /.panel -->
+
+                        </div>
+                        <!-- /.row -->
+                    </div>
+
+                    <div class="col-md-12">
+
+
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-8" style="padding:0px;">
+                                        <h3 class="panel-title">TOTAL EXPLOSIVE CONSUMPTION / POWDER FACTOR</h3>
+
+                                    </div>
+
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4 helpicon" style="margin-top:0px;text-align: right;padding: 0px;">
+                                        <select id="pwtype">
+                                            <option value="theory">Theoretical</option>
+                                            <option value="Actual">Actual</option>
+                                            <option value="both">Both</option>
+                                        </select>
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalexppw"><i class="glyphicon glyphicon-info-sign"></i></button>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter<select id="ddlfilterexp" onchange="filteroption('3')" class="form-control">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Date Wise</option>
+                                        </select>
+                                    </div>
+                                    <div id="expdivyearwise" style="display:inline;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">    Start Year <select id="ddlexpvspwfrom" class="form-control"></select></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12">To <select id="ddlexpvspwto" class="form-control"></select></div>
+                                    </div>
+
+                                    <div id="expdivdatewise" style="display:none;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">   Start Date <input type="text" id="dateexpfrom" class="form-control" /></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="dateexpto" class="form-control" /></div>
+                                    </div>
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containerExplosivevsPowderfactor" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                </div>
+                                <!-- /.panel-body -->
+                            </div>
+                            <!-- /.panel -->
+
+                        </div>
+
+                        <!-- /.col-lg-6 -->
+                        <!-- /.row -->
+
+
+                        <div id="iframeloading3" style="display: none;z-index:999; position: relative; top: 250px; left: 0px; width: 100%; height: 100%;">
+
+                            <img src="image/giphy.gif" height="128" width="128" alt="loading" class="ajax-loader" />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+
+                                    <h3 class="panel-title">BURDEN & SPACING / STEMMING </h3>
+
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 helpicon">
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalbvs"><i class="glyphicon glyphicon-info-sign"></i></button>
+
+                                    </div>
+
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter <select id="ddlfilterbvs" onchange="filteroption('5')" class="form-control">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Date Wise</option>
+                                        </select>
+                                    </div>
+                                    <div id="bvsdivyearwise" style="display:inline;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">  Start Year <select id="ddlburdenvsspacingfrom" class="form-control"></select></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <select id="ddlburdenvsspacingto" class="form-control"></select></div>
+                                    </div>
+                                    <div id="bvsdivdatewise" style="display:none;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">   Start Date <input type="text" id="datebvsfrom" class="form-control" /></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="datebvsto" class="form-control" /></div>
+                                    </div>
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containerburdenspacing" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                </div>
+
+
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                    </div>
+                    <!-- /.panel -->
+                    <div class="col-md-12">
+
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+
+                                    <h3 class="panel-title">GROUND AND AIR VIBRATION</h3>
+
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 helpicon">
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalEnv"><i class="glyphicon glyphicon-info-sign"></i></button>
+
+                                    </div>
+
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter<select id="ddlfilterenv" onchange="filteroption('4')" class="form-control">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Date Wise</option>
+                                        </select>
+                                    </div>
+                                    <div id="envdivyearwise" style="display:inline;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">Start Year <select id="Gddlblstperfrom" class="form-control"></select></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <select id="Gddlblstperto" class="form-control"></select></div>
+                                    </div>
+                                    <div id="envdivdatewise" style="display:none;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">   Start Date <input type="text" id="dateenvfrom" class="form-control" /></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="dateenvto" class="form-control" /></div>
+                                    </div>
+                                </div>
+
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containerblastperformence" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+                                </div>
+                            </div>
+
+                            <!-- /.panel-body -->
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+
+                                    <h3 class="panel-title">FLYROCK</h3>
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 helpicon">
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalEnv"><i class="glyphicon glyphicon-info-sign"></i></button>
+                                    </div>
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter<select id="ddlfilterfly" onchange="filteroption('8')" class="form-control">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Date Wise</option>
+                                        </select>
+                                    </div>
+                                    <div id="flydivyearwise" style="display:inline;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">Start Year <select id="ddlblstperfromfly" class="form-control"></select></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <select id="ddlblstpertofly" class="form-control"></select></div>
+                                    </div>
+                                    <div id="flydivdatewise" style="display:none;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">   Start Date <input type="text" id="dateenvfromfly" class="form-control" /></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="dateenvtofly" class="form-control" /></div>
+                                    </div>
+                                </div>
+
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containerblastperformencefly" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+                                </div>
+                            </div>
+
+                            <!-- /.panel-body -->
+                        </div>
+
+
+                        <!-- /.panel -->
+                    </div>
+
+                    <div class="col-md-12">
+
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+
+                                    <h3 class="panel-title">PRODUCTION PER HOLE / TOTAL HOLE BLASTED</h3>
+
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 helpicon">
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalpph"><i class="glyphicon glyphicon-info-sign"></i></button>
+
+                                    </div>
+
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter<select id="ddlfilterpph" onchange="filteroption('7')" class="form-control">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Date Wise</option>
+                                        </select>
+                                    </div>
+                                    <div id="pphdivyearwise" style="display:inline;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">   Start Year <select id="ddloutputperholefrom" class="form-control"></select></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <select id="ddloutputperholeto" class="form-control"></select></div>
+                                    </div>
+                                    <div id="pphdivdatewise" style="display:none;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> Start Date <input type="text" id="datepphfrom" class="form-control" /></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="datepphto" class="form-control" /></div>
+                                    </div>
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containerproductionperhole" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                </div>
+
+
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+
+                                    <h3 class="panel-title">PRODUCTION PER METER / TOTAL METERAGE BLASTED</h3>
+
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 helpicon">
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalppm"><i class="glyphicon glyphicon-info-sign"></i></button>
+
+                                    </div>
+
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter<select id="ddlfilterppm" onchange="filteroption('6')" class="form-control">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Date Wise</option>
+                                        </select>
+                                    </div>
+                                    <div id="ppmdivyearwise" style="display:inline;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> Start Year <select id="ddloutputpermeterfrom" class="form-control"></select></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <select id="ddloutputpermeterto" class="form-control"></select></div>
+                                    </div>
+                                    <div id="ppmdivdatewise" style="display:none;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">   Start Date <input type="text" id="dateppmfrom" class="form-control" /></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="dateppmto" class="form-control" /></div>
+                                    </div>
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containeroutputpermeter" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                </div>
+
+
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                        <!-- /.panel -->
+                    </div>
+
+
+                    <div class="col-md-12">
+
+
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+
+                                    <h3 class="panel-title">SPECIFIC CHARGE</h3>
+
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 helpicon">
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalsc"><i class="glyphicon glyphicon-info-sign"></i></button>
+
+                                    </div>
+
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter<select id="ddlfiltersc" onchange="filteroption('9')" class="form-control">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Month Wise</option>
+                                        </select>
+                                    </div>
+                                    <div id="scdivyearwise" style="display:inline;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">   Start Year <select id="ddlscfrom" class="form-control"></select></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <select id="ddlscto" class="form-control"></select></div>
+                                    </div>
+                                    <div id="scdivdatewise" style="display:none;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> Start Date <input type="text" id="datescfrom" class="form-control" /></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="datescto" class="form-control" /></div>
+                                    </div>
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containersc" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                </div>
+
+
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+
+                        <div id="iframeloading5" style="display: none;z-index:999; position: relative; top: 250px; left: 0px; width: 100%; height: 100%;">
+
+                            <img src="image/giphy.gif" height="128" width="128" alt="loading" class="ajax-loader" />
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+
+                                    <h3 class="panel-title">SPECIFIC DRILLING</h3>
+
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 helpicon">
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalsd"><i class="glyphicon glyphicon-info-sign"></i></button>
+
+                                    </div>
+
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter<select id="ddlfiltersd" onchange="filteroption('10')" class="form-control">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Month Wise</option>
+                                        </select>
+                                    </div>
+                                    <div id="sddivyearwise" style="display:inline;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12">   Start Year <select id="ddlsdfrom" class="form-control"></select></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <select id="ddlsdto" class="form-control"></select></div>
+                                    </div>
+                                    <div id="sddivdatewise" style="display:none;">
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> Start Date <input type="text" id="datesdfrom" class="form-control" /></div>
+                                        <div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="datesdto" class="form-control" /></div>
+                                    </div>
+                                </div>
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containersd" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+                                </div>
+
+
+                            </div>
+                            <!-- /.panel-body -->
+                        </div>
+                        <!-- /.panel -->
+                    </div>
+
+                    <div class="col-md-12">
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">TOTAL BLASTING COST</h3>
+
+                                    <div class="col-lg-1 col-md-1 col-sm-1 col-xs-2 helpicon">
+                                        <button type="button" id="mybutton" data-toggle="modal" data-target="#myModalblastcosttotal"><i class="glyphicon glyphicon-info-sign"></i></button>
+
+                                    </div>
+
+                                </div>
+                                <div class="" style="margin-top:10px;">
+                                    <div class="col-md-4 col-sm-4 col-xs-12">
+                                        Filter
+                                        <select id="ddlfilterblastcostTotal" class="form-control" onchange="filteroption('11')">
+                                            <option value="0">Year Wise</option>
+                                            <option value="1">Date Wise</option>
+                                        </select>    <!--<button id="btnblastcost" value="Click">Click</button>-->
+                                    </div>
+                                    <div id="blastcostdivyearwiseTotal" style="display:inline;"> <div class="col-md-4 col-sm-4 col-xs-12"> Start Year <select id="ddloperationcostfromTotal" class="form-control"></select></div> <div class="col-md-4 col-sm-4 col-xs-12">To <select id="ddloperationcosttoTotal" class="form-control"></select></div></div>
+                                    <div id="blastcostdivdatewiseTotal" style="display:none;"> <div class="col-md-4 col-sm-4 col-xs-12">   Start Date <input type="text" id="dateblastcostfromTotal" class="form-control" /></div><div class="col-md-4 col-sm-4 col-xs-12"> To <input type="text" id="dateblastcosttoTotal" class="form-control" /></div></div>
+
+                                </div>
+
+
+                                <!-- /.panel-heading -->
+                                <div class="panel-body">
+                                    <div id="containerBlastCostTotal" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
+
+                        <!-- /.row -->
+                    </div>
+
+
+
+
+
+
+                </div>
+            </div>
+
+
+        </section>
+    </section>
+
+    <!--main content end-->
+    <div class="modal fade" id="myModalblastcost" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Average Blast Cost Graph</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Cost analysis graph is important to show a generalized trend of the average blasting cost being borne by any mine. Year, month and date-wise cost variations are possible to be plotted. This particular graph is helpful to individual mine owners for getting a clear differentiation on the amount of capital being invested in several consumables (Explosives and Initiators) and processes (Drilling) surrounding blasting.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="myModalblastcosttotal" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Total Blast Cost Graph</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Cost analysis graph is important to show a generalized trend of the total blasting cost being borne by any mine. Year, month and date-wise cost variations are possible to be plotted. This particular graph is helpful to individual mine owners for getting a clear differentiation on the amount of capital being invested in several consumables (Explosives and Initiators) and processes (Drilling) surrounding blasting.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <div class="modal fade" id="myModalcost" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">BLAST COST PER TON</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        This graph is helpful in determining the amount of capital that is being invested w.r.t the production obtained by the mine. Comparing cost per tonne and analyzing the general trends can help determine the effect of changing blast parameters on cost.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="myModalexppw" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">TOTAL EXPLOSIVE CONSUMPTION / POWDER FACTOR</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        This graph is very helpful in understanding the explosive consumption of each mine in kgs. A linearly increasing trend line shows that over several months the explosive consumption of the mine has increased. This can be attributed to the mine encountering hard geology/strata for which they might have to consider using higher quantity of explosives. Also Powder factor is a key performance indicator for any mine. Hence any graph showing its variation over a specific time period can help the mine in figuring out their overall performance of blasts.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="myModalEnv" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">ENVIRONMENT PERFORMANCE(VIBRATION AND FLYROCK)</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Environment Performance graph indicates the performance of the blasting activity at a mine-site w.r.t its subsequent impacts on the environment. This graph can aid the mine in imposing statutory/mine-specific limits for air blast over pressure, ground vibration and fly rock and ensuring whether proper compliance is achieved over time.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="myModalbvs" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">BURDEN & SPACING & STEMMING </h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Burden and Spacing being the primary parameters in any blast design influence several post blast repercussions. For e.g. a simple technique well-known to the mining industry is to keep the burden constant and increase the spacing by 0.1-0.3m. This would aid the mine site in reducing blasting costs at the mine.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="myModalppm" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">PRODUCTION PER METER / TOTAL METERAGE BLASTED</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        This graph is helpful in determining the variation of another important KPI w.r.t drilling and blasting activity i.e. production obtained per meter drilled (drill factor).
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="myModalpph" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">PRODUCTION PER HOLE / TOTAL HOLE BLASTED</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Production per hole determines the tonnage that can be obtained from each hole that is being blasted. This can help in determining whether to increase or decrease the total number of holes to be blasted per blast (size of the blast) considering that blast parameters have been fixed as per geological/geotechnical parameters (from previous benchmarking analysis).
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModalsc" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">SPECIFIC CHARGE</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Specific Charge or Rock constant is a measure of the amount of explosives needed/consumed to break
+                        one cubic meter of rock and it is determined by controlled trial blasts in a vertical bench
+                        (Langefors and Kihlström 1967).
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal fade" id="myModalsd" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">SPECIFIC DRILLING</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Specific Drilling is a measure of the meterage needed to be drilled to break one cubic meter of rock.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

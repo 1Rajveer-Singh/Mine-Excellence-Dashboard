@@ -1,0 +1,11 @@
+minename,pitname,zonename,benchname,rock_name,blastdate,total_explosive_kg,total_drill_mtr,ton_recover,actual_pf_ton_kg,theoretical_pf_ton_kg,flyrock,ppv,air_blast,total_exp_cost,burden,spacing,stemming_length,hole_depth,bench_height,holes_drilled,drilling_cost,man_power_cost,blast_accessoriesdelay_cost
+Gevra,East Section,Zone A,Bench 1,SANDSTONE,27-03-2023,2500.5,306.0,800.2,3.12,3.12,30.0,2.1,0.8,1256058.0,8.0,9.0,5.99,17.0,17.0,25,153000,125000,5306.4
+Gevra,West Section,Zone B,Bench 2,LIMESTONE,28-03-2023,2800.3,350.5,920.1,3.04,3.15,28.5,1.9,0.7,1380000.0,8.5,9.5,6.2,18.0,18.0,30,175000,135000,6100.2
+Kusmunda,North Pit,Zone C,Bench 3,SHALE,29-03-2023,2200.8,280.2,750.6,2.93,3.01,25.0,2.3,0.9,1120000.0,7.8,8.8,5.8,16.5,16.5,22,142000,118000,4800.3
+Kusmunda,South Pit,Zone D,Bench 4,SANDSTONE,30-03-2023,3100.0,385.0,1050.8,2.95,3.08,32.0,2.0,0.6,1650000.0,8.2,9.2,6.0,17.5,17.5,35,195000,155000,7200.5
+Dipka,Main Pit,Zone E,Bench 5,COAL,01-04-2023,1800.5,220.0,600.5,3.00,3.10,20.0,1.8,0.5,950000.0,7.5,8.5,5.5,16.0,16.0,18,128000,108000,4200.1
+Dipka,Extension,Zone F,Bench 6,MUDSTONE,02-04-2023,2650.2,325.8,880.3,3.01,3.12,27.5,2.2,0.8,1425000.0,8.1,9.1,5.9,17.2,17.2,28,168000,128000,5800.4
+Gevra,Central Section,Zone G,Bench 7,SANDSTONE,03-04-2023,2950.1,365.5,980.7,3.01,3.14,29.0,2.1,0.7,1580000.0,8.3,9.3,6.1,17.8,17.8,32,185000,145000,6500.3
+Kusmunda,East Block,Zone H,Bench 8,LIMESTONE,04-04-2023,2100.9,260.3,700.4,3.00,3.09,24.5,1.9,0.6,1120000.0,7.9,8.9,5.7,16.8,16.8,20,148000,120000,4600.2
+Dipka,North Block,Zone I,Bench 9,SHALE,05-04-2023,2750.6,340.2,910.5,3.02,3.11,28.0,2.0,0.7,1475000.0,8.0,9.0,6.0,17.0,17.0,29,172000,132000,6000.5
+Gevra,South Extension,Zone J,Bench 10,COAL,06-04-2023,1950.3,240.8,650.2,3.00,3.08,22.5,1.8,0.5,1050000.0,7.6,8.6,5.6,16.3,16.3,19,135000,115000,4500.3
