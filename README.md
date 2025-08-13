@@ -2,11 +2,15 @@
 
 <div align="center">
 
+
 ![Dashboard Preview](https://img.shields.io/badge/Dashboard-Live-brightgreen?style=for-the-badge&logo=react)
 ![Version](https://img.shields.io/badge/Version-1.0.0-blue?style=for-the-badge)
 ![Build Status](https://img.shields.io/badge/Build-Passing-success?style=for-the-badge)
 ![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)
 ![Vite](https://img.shields.io/badge/Vite-6.3.5-646CFF?style=for-the-badge&logo=vite)
+
+Deploy Link: 
+![Vite](https://mine-excellence-dashboard.vercel.app)
 
 **🚀 A state-of-the-art mining analytics dashboard built with modern React technologies**
 
