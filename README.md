@@ -7,10 +7,16 @@
 ![Build Status](https://img.shields.io/badge/Build-Passing-success?style=for-the-badge)
 ![React](https://img.shields.io/badge/React-18.3-61DAFB?style=for-the-badge&logo=react)
 ![Vite](https://img.shields.io/badge/Vite-6.3.5-646CFF?style=for-the-badge&logo=vite)
+![Deployment](https://img.shields.io/badge/Deployed-Vercel-black?style=for-the-badge&logo=vercel)
 
 **🚀 A state-of-the-art mining analytics dashboard built with modern React technologies**
 
 *Transform your surface blasting operations with powerful data visualization and analytics*
+
+### 🌐 **Live Demo**
+**[📊 View Live Dashboard](https://mine-excellence-dashboard.vercel.app/)** 
+
+*Experience the dashboard in action with real-time data visualization and interactive analytics*
 
 </div>
 
@@ -45,7 +51,11 @@
 - npm or yarn package manager
 - Git
 
-### Installation
+### Try the Live Demo First!
+**🌐 [Experience the Dashboard Live](https://mine-excellence-dashboard.vercel.app/)**  
+*No installation required - see all features in action*
+
+### Local Installation
 
 ```bash
 # Clone the repository
@@ -173,13 +183,25 @@ exportChartAsImage('png', 'production-metrics');
 
 ## 🚀 Deployment
 
+### 🌐 Live Production Site
+**🎯 [Mine Excellence Dashboard - Live Demo](https://mine-excellence-dashboard.vercel.app/)**
+
+*The dashboard is live and fully functional with all features enabled*
+
+### 📊 Live Features Available:
+- ✅ **Real-time Analytics** - Interactive data visualization
+- ✅ **Export Functionality** - PDF and image exports working
+- ✅ **Dark/Light Themes** - Theme switching enabled
+- ✅ **Responsive Design** - Optimized for all devices
+- ✅ **Performance Optimized** - Fast loading with code splitting
+
 ### Production Build
 ```bash
 npm run build
 ```
 
 ### Deployment Options
-- **Vercel**: Zero-config deployment
+- **✅ Vercel**: Currently deployed - Zero-config deployment
 - **Netlify**: Drag-and-drop deployment
 - **GitHub Pages**: Static hosting
 - **Docker**: Containerized deployment
@@ -216,8 +238,12 @@ We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.
 [![GitHub Issues](https://img.shields.io/badge/Issues-GitHub-red?style=for-the-badge&logo=github)](https://github.com/1Rajveer-Singh/Mine-Excellence-Dashboard/issues)
 [![Documentation](https://img.shields.io/badge/Docs-Available-blue?style=for-the-badge&logo=gitbook)](./src/Documentation/)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Vercel-black?style=for-the-badge&logo=vercel)](https://mine-excellence-dashboard.vercel.app/)
 
 **Built with ❤️ by Rajveer Singh**
+
+### 🌐 Quick Links
+**[🚀 Live Dashboard](https://mine-excellence-dashboard.vercel.app/)** | **[📚 Documentation](./src/Documentation/)** | **[🐛 Report Issues](https://github.com/1Rajveer-Singh/Mine-Excellence-Dashboard/issues)**
 
 </div>
 
@@ -232,6 +258,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 <div align="center">
 
 **⭐ Star this repository if you found it helpful!**
+
+🌐 **[Try the Live Demo](https://mine-excellence-dashboard.vercel.app/)** 🌐
 
 *Making mining operations smarter, safer, and more efficient.*
 
