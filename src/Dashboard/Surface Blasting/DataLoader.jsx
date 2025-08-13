@@ -9,7 +9,7 @@ import KPI6 from './Total_Explosive_consumption_powder_Factor';
 
 import KPI7 from './Production_per_Hole';
 import KPI8 from './Production_per_meter';
-import KPI9 from './Specific_charge';
+import KPI9 from './Specific_Charge';
 import KPI10 from './Specific_Drilling';
 
 
