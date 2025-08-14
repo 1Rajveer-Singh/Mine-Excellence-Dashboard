@@ -1,30 +1,8 @@
 {
   "name": "mine-excellence-dashboard",
-  "private": false,
-  "version": "1.0.0",
-  "description": "A state-of-the-art mining analytics dashboard for surface blasting operations with advanced data visualization and real-time analytics",
-  "author": "Rajveer Singh <rajveer.singh@example.com>",
-  "license": "MIT",
-  "homepage": "https://mine-excellence-dashboard.vercel.app/",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/1Rajveer-Singh/Mine-Excellence-Dashboard.git"
-  },
-  "bugs": {
-    "url": "https://github.com/1Rajveer-Singh/Mine-Excellence-Dashboard/issues"
-  },
-  "keywords": [
-    "mining",
-    "analytics",
-    "dashboard",
-    "surface-blasting",
-    "react",
-    "vite",
-    "data-visualization",
-    "recharts",
-    "vercel",
-    "live-demo"
-  ],
+ 
+  "private": true,
+  "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",

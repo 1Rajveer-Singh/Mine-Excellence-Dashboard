@@ -5,15 +5,6 @@ import { Calendar, TrendingUp, Volume2, Download, BarChart, Filter } from 'lucid
 
 const SpecificCharge = ({ filteredData, DarkMode }) => {
   const isDarkMode = !DarkMode;
-  
-  // Debug logging for Specific Charge component
-  console.log('🔍 Specific Charge Component - Data Check:', {
-    hasData: Array.isArray(filteredData) && filteredData.length > 0,
-    dataLength: filteredData?.length || 0,
-    sampleItem: filteredData?.[0],
-    dataSource: filteredData?.[0]?.dataSource,
-    availableFields: filteredData?.[0] ? Object.keys(filteredData[0]) : []
-  });
   const [timeMode, setTimeMode] = useState('daily');
   const [dateRange, setDateRange] = useState({
     startDate: '',
@@ -32,45 +23,18 @@ const SpecificCharge = ({ filteredData, DarkMode }) => {
   const exportRef = useRef(null);
   const chartRef = useRef(null);
 
-  // Use actual data with fallback to empty array
-  const rawData = Array.isArray(filteredData) && filteredData.length > 0 ? filteredData : [];
+  // Demo data for testing
+  const demoData = filteredData;
 
-  // Debug data structure
-  useEffect(() => {
-    console.log('🔍 Specific_Charge Debug:', {
-      filteredDataType: typeof filteredData,
-      filteredDataIsArray: Array.isArray(filteredData),
-      filteredDataLength: filteredData?.length || 0,
-      rawDataLength: rawData.length,
-      sampleRecord: rawData[0],
-      requiredFields: rawData[0] ? {
-        blastdate: rawData[0].blastdate,
-        total_explos_cost: rawData[0].total_explos_cost,
-        total_explosive_kg: rawData[0].total_explosive_kg,
-        dataSource: rawData[0].dataSource
-      } : 'No data'
-    });
-  }, [filteredData, rawData]);
+  // Use demo data if filteredData is empty
+  const dataToUse = Array.isArray(filteredData) && filteredData.length > 0 ? filteredData : demoData;
 
-  // Helper: Parse multiple date formats (MM/DD/YYYY from CSV and DD-MM-YYYY from JSON)
+  // Helper: Parse DD-MM-YYYY date format
   const parseBlastDate = (dateStr) => {
     if (!dateStr) return null;
-    
-    // Handle MM/DD/YYYY format (CSV)
-    if (dateStr.includes('/')) {
-      const [month, day, year] = dateStr.split('/').map(Number);
-      if (!month || !day || !year) return null;
-      return new Date(year, month - 1, day);
-    }
-    
-    // Handle DD-MM-YYYY format (JSON)
-    if (dateStr.includes('-')) {
-      const [day, month, year] = dateStr.split('-').map(Number);
-      if (!day || !month || !year) return null;
-      return new Date(year, month - 1, day);
-    }
-    
-    return null;
+    const [day, month, year] = dateStr.split('-').map(Number);
+    if (!day || !month || !year) return null;
+    return new Date(year, month - 1, day);
   };
 
   const isValidDate = (dateStr) => {
@@ -85,7 +49,7 @@ const SpecificCharge = ({ filteredData, DarkMode }) => {
   // Calculate Specific Charge using the formula: Specific Charge (kg/m³) = Total Explosive (kg) / Theoretical Volume Blasted (m³)
   const calculateSpecificCharge = (item) => {
     const totalExplosive = item.total_explosive_kg || item.explosive_quantity || item.explosive_used || 0;
-    const theoreticalVolume = item.theoretical_volume_m3 || item.prodution_therotical_vol || item.volume_blasted || item.blast_volume || 0;
+    const theoreticalVolume = item.theoretical_volume_m3 || item.volume_blasted || item.blast_volume || 0;
     
     if (totalExplosive > 0 && theoreticalVolume > 0) {
       return totalExplosive / theoreticalVolume;
@@ -112,12 +76,12 @@ const SpecificCharge = ({ filteredData, DarkMode }) => {
 
   // Calculate available months based on data
   const availableMonths = useMemo(() => {
-    if (!Array.isArray(rawData)) return months.map(month => ({ ...month, hasData: false }));
+    if (!Array.isArray(dataToUse)) return months.map(month => ({ ...month, hasData: false }));
     
     const monthsWithData = new Set();
     
-    rawData.forEach(item => {
-      if (item.total_explos_cost && item.total_explos_cost > 0 && isValidDate(item.blastdate)) {
+    dataToUse.forEach(item => {
+      if (item.total_exp_cost && item.total_exp_cost > 0 && isValidDate(item.blastdate)) {
         const date = parseBlastDate(item.blastdate);
         if (date && date.getFullYear() === dateRange.selectedYear) {
           monthsWithData.add(date.getMonth());
@@ -129,7 +93,7 @@ const SpecificCharge = ({ filteredData, DarkMode }) => {
       ...month,
       hasData: monthsWithData.has(month.value)
     }));
-  }, [rawData, dateRange.selectedYear, months]);
+  }, [dataToUse, dateRange.selectedYear, months]);
 
   // Auto-select first available month when year changes
   useEffect(() => {
@@ -156,33 +120,20 @@ const SpecificCharge = ({ filteredData, DarkMode }) => {
   }, []);
 
   const processedData = useMemo(() => {
-    if (!Array.isArray(rawData)) {
-      console.log('⚠️ Specific_Charge: rawData is not an array');
+    if (!Array.isArray(dataToUse)) {
       return [];
     }
-    console.log('🔍 Specific_Charge: Starting with', rawData.length, 'records');
-    
-    let validData = rawData.filter(
+    let validData = dataToUse.filter(
       (item) =>
-        item.total_explos_cost &&
-        item.total_explos_cost > 0 &&
+        item.total_exp_cost &&
+        item.total_exp_cost > 0 &&
         isValidDate(item.blastdate)
     );
-    console.log('🔍 Specific_Charge: After basic filtering:', validData.length, 'records');
 
     validData = validData.filter((item) => {
       const calculatedSpecificCharge = calculateSpecificCharge(item);
-      const isValid = calculatedSpecificCharge > 0;
-      if (!isValid && item.blastcode) {
-        console.log('❌ Specific_Charge calc failed for', item.blastcode, {
-          total_explosive_kg: item.total_explosive_kg,
-          prodution_therotical_vol: item.prodution_therotical_vol,
-          calculated: calculatedSpecificCharge
-        });
-      }
-      return isValid;
+      return calculatedSpecificCharge > 0;
     });
-    console.log('🔍 Specific_Charge: After calculation filtering:', validData.length, 'records');
 
     if (timeMode === 'daily') {
       if (dateRange.startDate || dateRange.endDate) {
@@ -214,10 +165,59 @@ const SpecificCharge = ({ filteredData, DarkMode }) => {
     }
 
     if (timeMode === 'monthly') {
+      // Fixed: Group by day within the selected month to show daily data
+      const dailyData = {};
+
+      validData.forEach((item) => {
+        const date = parseBlastDate(item.blastdate);
+        // Create day key for the selected month (YYYY-MM-DD format)
+        const dayKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+        
+        if (!dailyData[dayKey]) {
+          dailyData[dayKey] = {
+            date: dayKey,
+            costs: [],
+            specificChargeValues: [],
+            count: 0,
+          };
+        }
+        dailyData[dayKey].costs.push(item.total_exp_cost);
+        const calculatedSpecificCharge = calculateSpecificCharge(item);
+        if (calculatedSpecificCharge > 0) {
+          dailyData[dayKey].specificChargeValues.push(calculatedSpecificCharge);
+        }
+        dailyData[dayKey].count++;
+      });
+
+      return Object.values(dailyData)
+        .map((dayData) => {
+          const date = new Date(dayData.date);
+          return {
+            date: dayData.date,
+            displayDate: date.toLocaleDateString(undefined, { 
+              day: 'numeric', 
+              month: 'short',
+              year: 'numeric'
+            }),
+            cost: dayData.costs.reduce((sum, cost) => sum + cost, 0) / dayData.costs.length,
+            actual_pf_ton_kg:
+              dayData.specificChargeValues.length > 0
+                ? dayData.specificChargeValues.reduce((sum, sc) => sum + sc, 0) /
+                  dayData.specificChargeValues.length
+                : null,
+            blastCount: dayData.count,
+          };
+        })
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+    } else if (timeMode === 'yearly') {
+      // Fixed: Group by month within the selected year range to show monthly data
       const monthlyData = {};
 
       validData.forEach((item) => {
         const date = parseBlastDate(item.blastdate);
+        if (!date) return;
+        
+        // Create month key (YYYY-MM format)
         const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
         
         if (!monthlyData[monthKey]) {
@@ -228,7 +228,7 @@ const SpecificCharge = ({ filteredData, DarkMode }) => {
             count: 0,
           };
         }
-        monthlyData[monthKey].costs.push(item.total_explos_cost);
+        monthlyData[monthKey].costs.push(item.total_exp_cost);
         const calculatedSpecificCharge = calculateSpecificCharge(item);
         if (calculatedSpecificCharge > 0) {
           monthlyData[monthKey].specificChargeValues.push(calculatedSpecificCharge);
@@ -237,53 +237,24 @@ const SpecificCharge = ({ filteredData, DarkMode }) => {
       });
 
       return Object.values(monthlyData)
-        .map((monthData) => ({
-          date: monthData.date,
-          displayDate: new Date(monthData.date + '-01').toLocaleDateString(undefined, { year: 'numeric', month: 'long' }),
-          cost: monthData.costs.reduce((sum, cost) => sum + cost, 0) / monthData.costs.length,
-          actual_pf_ton_kg:
-            monthData.specificChargeValues.length > 0
-              ? monthData.specificChargeValues.reduce((sum, sc) => sum + sc, 0) /
-                monthData.specificChargeValues.length
-              : null,
-          blastCount: monthData.count,
-        }))
-        .sort((a, b) => a.date.localeCompare(b.date));
-    } else if (timeMode === 'yearly') {
-      const yearlyData = {};
-
-      validData.forEach((item) => {
-        const year = parseBlastDate(item.blastdate)?.getFullYear();
-        if (!year) return;
-        if (!yearlyData[year]) {
-          yearlyData[year] = {
-            year,
-            costs: [],
-            specificChargeValues: [],
-            count: 0,
+        .map((monthData) => {
+          const date = new Date(monthData.date + '-01');
+          return {
+            date: monthData.date,
+            displayDate: date.toLocaleDateString(undefined, { 
+              month: 'short', 
+              year: 'numeric' 
+            }),
+            cost: monthData.costs.reduce((sum, cost) => sum + cost, 0) / monthData.costs.length,
+            actual_pf_ton_kg:
+              monthData.specificChargeValues.length > 0
+                ? monthData.specificChargeValues.reduce((sum, sc) => sum + sc, 0) /
+                  monthData.specificChargeValues.length
+                : null,
+            blastCount: monthData.count,
           };
-        }
-        yearlyData[year].costs.push(item.total_explos_cost);
-        const calculatedSpecificCharge = calculateSpecificCharge(item);
-        if (calculatedSpecificCharge > 0) {
-          yearlyData[year].specificChargeValues.push(calculatedSpecificCharge);
-        }
-        yearlyData[year].count++;
-      });
-
-      return Object.values(yearlyData)
-        .map((yearData) => ({
-          date: yearData.year.toString(),
-          displayDate: yearData.year.toString(),
-          cost: yearData.costs.reduce((sum, cost) => sum + cost, 0) / yearData.costs.length,
-          actual_pf_ton_kg:
-            yearData.specificChargeValues.length > 0
-              ? yearData.specificChargeValues.reduce((sum, sc) => sum + sc, 0) /
-                yearData.specificChargeValues.length
-              : null,
-          blastCount: yearData.count,
-        }))
-        .sort((a, b) => parseInt(a.date) - parseInt(b.date));
+        })
+        .sort((a, b) => new Date(a.date + '-01') - new Date(b.date + '-01'));
     } else {
       return validData
         .map((item) => {
@@ -292,7 +263,7 @@ const SpecificCharge = ({ filteredData, DarkMode }) => {
             ...item,
             date: parsedDate ? parsedDate.toISOString().split('T')[0] : item.blastdate,
             displayDate: parsedDate ? parsedDate.toLocaleDateString() : item.blastdate,
-            cost: item.total_explos_cost,
+            cost: item.total_exp_cost,
             actual_pf_ton_kg: calculateSpecificCharge(item),
             // Store raw values for tooltip display
             total_explosive_kg: item.total_explosive_kg || item.explosive_quantity || item.explosive_used || 0,
@@ -301,7 +272,7 @@ const SpecificCharge = ({ filteredData, DarkMode }) => {
         })
         .sort((a, b) => new Date(a.date) - new Date(b.date));
     }
-  }, [rawData, timeMode, dateRange]);
+  }, [dataToUse, timeMode, dateRange]);
 
   const summaryStats = useMemo(() => {
     const validCosts = processedData.filter((item) => item.cost > 0);

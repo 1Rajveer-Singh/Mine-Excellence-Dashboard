@@ -18,24 +18,16 @@ const BlastAnalyticsDashboard = ({ filteredData, DarkMode = false }) => {
 
   // Use filteredData directly and add data validation
   const rawData = Array.isArray(filteredData) && filteredData.length > 0 ? filteredData : [];
-  
-  // Debug logging
-  console.log('🔍 Total Explosive Component - Raw Data:', {
-    hasData: rawData.length > 0,
-    dataLength: rawData.length,
-    sampleItem: rawData[0],
-    dataSource: rawData[0]?.dataSource
-  });
 
-  // Helper function to parse MM/DD/YYYY date format from CSV
+  // Helper function to parse DD-MM-YYYY date format
   const parseBlastDate = (dateStr) => {
     if (!dateStr) return null;
-    // Handle MM/DD/YYYY format from CSV
-    if (dateStr.includes('/')) {
-      const parts = dateStr.split('/');
+    // Handle DD-MM-YYYY format
+    if (dateStr.includes('-')) {
+      const parts = dateStr.split('-');
       if (parts.length === 3) {
-        const month = parseInt(parts[0], 10) - 1; // Month is 0-indexed
-        const day = parseInt(parts[1], 10);
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
         const year = parseInt(parts[2], 10);
         return new Date(year, month, day);
       }
@@ -46,78 +38,35 @@ const BlastAnalyticsDashboard = ({ filteredData, DarkMode = false }) => {
 
   // Calculate derived metrics
   const processedData = useMemo(() => {
-    if (!Array.isArray(rawData) || rawData.length === 0) {
-      console.log('⚠️ No data available for processing');
-      return [];
-    }
-    
     return rawData.map(item => {
-      // Debug logging for data structure
-      if (rawData.indexOf(item) === 0) {
-        console.log('📊 Sample data item:', item);
-        console.log('📊 Available fields:', Object.keys(item));
-      }
-      
       // Use actual field names from your data structure
-      const total_explosive = parseFloat(item.total_explosive_kg) || 0;
-      const total_drill = parseFloat(item.total_drill_mtr || item.total_drill) || 0;
-      
-      const explosive_consumption = total_explosive > 0 && total_drill > 0 
-        ? total_explosive / total_drill 
+      const explosive_consumption = item.total_explosive_kg && item.total_drill_mtr 
+        ? item.total_explosive_kg / item.total_drill_mtr 
         : 0;
       
       // Use the actual powder factor fields from your data
-      const actual_pf = parseFloat(item.actual_pf_ton_kg) || 0;
-      const theoretical_pf = parseFloat(item.theoretical_pf_ton_kg) || 0;
+      const actual_pf = item.actual_pf_ton_kg || 0;
+      const theoretical_pf = item.theoretical_pf_ton_kg || 0;
       
       // Parse date to extract year
       const blastDate = parseBlastDate(item.blastdate);
-      const year = blastDate ? blastDate.getFullYear() : new Date().getFullYear();
+      const year = blastDate ? blastDate.getFullYear() : 2023;
       
       return {
         ...item,
         year: year,
         explosive_consumption: parseFloat(explosive_consumption.toFixed(2)),
         Actual_PF: parseFloat(actual_pf.toFixed(3)),
-        Theoretical_PF: parseFloat(theoretical_pf.toFixed(3)),
-        // Ensure required numeric fields are present
-        total_explosive_kg: total_explosive,
-        total_drill_mtr: total_drill,
-        ton_recover: parseFloat(item.ton_recover) || 0
+        Theoretical_PF: parseFloat(theoretical_pf.toFixed(3))
       };
     });
   }, [rawData]);
 
   // Filter data based on time mode and date range
   const chartData = useMemo(() => {
-    if (!processedData || processedData.length === 0) {
-      console.log('⚠️ No processed data available for chart');
-      return [];
-    }
-    
-    let filtered = processedData.filter(item => {
-      // More lenient filtering - check if at least one required field has data
-      const hasExplosive = (item.total_explosive_kg || 0) > 0;
-      const hasDrill = (item.total_drill_mtr || item.total_drill || 0) > 0;
-      const hasTonnage = (item.ton_recover || 0) > 0;
-      const hasDate = item.blastdate && item.blastdate !== '';
-      
-      if (!hasDate) {
-        console.log('⚠️ Item missing date:', item);
-        return false;
-      }
-      
-      // Allow items with at least some data
-      return hasExplosive || hasDrill || hasTonnage;
-    });
-    
-    console.log(`📊 Filtered ${filtered.length} items from ${processedData.length} total items`);
-    
-    if (filtered.length === 0) {
-      console.log('⚠️ No items passed filtering criteria');
-      // Show sample of what was filtered out
-      console.log('📋 Sample of raw data:', processedData.slice(0, 3));
-    }
+    let filtered = processedData.filter(item => 
+      item.total_explosive_kg && item.total_drill_mtr && item.ton_recover
+    );
 
     if (timeMode === 'Daily') {
       // Daily mode: Show all records within date range

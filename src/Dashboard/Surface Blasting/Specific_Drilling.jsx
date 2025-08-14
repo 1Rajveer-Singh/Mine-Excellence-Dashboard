@@ -2,6 +2,8 @@
 import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Calendar, TrendingUp, Volume2, Download, BarChart, Filter } from 'lucide-react';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 const SpecificDrilling = ({ filteredData, DarkMode }) => {
   const isDarkMode = !DarkMode;
@@ -54,12 +56,12 @@ const SpecificDrilling = ({ filteredData, DarkMode }) => {
 
   const parseBlastDate = (dateStr) => {
     if (!dateStr) return null;
-    // Handle MM/DD/YYYY format from CSV
-    if (dateStr.includes('/')) {
-      const parts = dateStr.split('/');
+    // Handle DD-MM-YYYY format
+    if (dateStr.includes('-')) {
+      const parts = dateStr.split('-');
       if (parts.length === 3) {
-        const month = parseInt(parts[0], 10) - 1; // Month is 0-indexed
-        const day = parseInt(parts[1], 10);
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1; // Month is 0-indexed
         const year = parseInt(parts[2], 10);
         return new Date(year, month, day);
       }
@@ -96,8 +98,8 @@ const SpecificDrilling = ({ filteredData, DarkMode }) => {
     }
     let validData = dataToUse.filter(
       (item) =>
-        item.total_explos_cost &&
-        item.total_explos_cost > 0 &&
+        item.total_exp_cost &&
+        item.total_exp_cost > 0 &&
         isValidDate(item.blastdate)
     );
 
@@ -141,7 +143,7 @@ const SpecificDrilling = ({ filteredData, DarkMode }) => {
           ...item,
           date: parseBlastDate(item.blastdate).toISOString().split('T')[0],
           displayDate: parseBlastDate(item.blastdate).toLocaleDateString(),
-          cost: item.total_explos_cost,
+          cost: item.total_exp_cost,
           specific_drilling: calculateSpecificDrilling(item),
           drilling_meterage: item.total_drill_meterage || item.total_drilling || item.total_drill || item.drilling_meterage || 0,
           theoretical_volume: item.theoretical_volume_m3 || item.volume_blasted || item.blast_volume || item.prodution_therotical_vol || 0,
@@ -160,7 +162,7 @@ const SpecificDrilling = ({ filteredData, DarkMode }) => {
             count: 0,
           };
         }
-        yearlyData[year].costs.push(item.total_explos_cost);
+        yearlyData[year].costs.push(item.total_exp_cost);
         const specificDrilling = calculateSpecificDrilling(item);
         if (specificDrilling !== null) {
           yearlyData[year].SpecificDrillingValues.push(specificDrilling);
@@ -187,7 +189,7 @@ const SpecificDrilling = ({ filteredData, DarkMode }) => {
           ...item,
           date: parseBlastDate(item.blastdate).toISOString().split('T')[0],
           displayDate: parseBlastDate(item.blastdate).toLocaleDateString(),
-          cost: item.total_explos_cost,
+          cost: item.total_exp_cost,
           specific_drilling: calculateSpecificDrilling(item),
           drilling_meterage: item.total_drill_meterage || item.total_drilling || item.total_drill || item.drilling_meterage || 0,
           theoretical_volume: item.theoretical_volume_m3 || item.volume_blasted || item.blast_volume || item.prodution_therotical_vol || 0,

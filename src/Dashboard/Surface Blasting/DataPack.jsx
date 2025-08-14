@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 
-import KPI3 from './Flyrock';
+import KPI3 from './Flyrock.jsx';
 
 import { Filter, Upload, Trash2, Sun, Moon, Database, Search, TrendingUp, MapPin, Layers, Mountain, Gem, Zap, Activity, BarChart3, Settings, RefreshCw, ChevronDown, Eye, EyeOff, Download, BookOpen, Maximize2, Grid, List } from 'lucide-react';
 
